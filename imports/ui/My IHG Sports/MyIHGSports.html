@@ -1,0 +1,20 @@
+<template name="MyIHGSports"> 
+
+	<header>
+      <h2>I'm taking part in IHG for: </h2>
+      <div style= "margin-top: 0px"><h5> Select all that apply</h5>  </div>
+    </header>
+    
+
+    <div class="ui middle aligned selection list">
+      {{#each sports}}
+        {{> sport}}
+      {{/each}}
+    </div>
+</template>
+
+<template name="sport">
+  <div class="item">
+    {{name}}
+  </div>
+</template>

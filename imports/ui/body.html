@@ -1,0 +1,61 @@
+
+
+<body>
+
+  <div class="ui inverted visible left sidebar vertical menu">
+    
+    <div class = "header item" style= "padding-top:25px">
+    
+      <header>
+        <h3>Chong Yi Qiong </h3>
+      </header>
+      <h4>
+        E0202204 <br>
+        Sheares Hall<br>
+        <br>
+      </h4>   
+    </div>
+    
+      
+    <a class="item active menu-sports" >
+      My IHG Sports
+    </a>
+
+    <a class="item menu-availability">
+      Availability
+    </a>
+    
+  </div>
+
+
+
+  
+  <div class="pusher" style = "margin-top: 20px">
+    
+
+  <header>
+      <h2>I'm taking part in IHG for: </h2>
+      <div style= "margin-top: 0px"><h5> Select all that apply</h5>  </div>
+    </header>
+    
+
+    <div class="ui middle aligned selection list">
+      {{#each sports}}
+        {{> sport}}
+      {{/each}}
+    </div>
+  </div>
+
+</body>
+
+<template name="sport">
+  <div class="item">
+    {{name}}
+  </div>
+</template>
+
+
+
+
+
+
