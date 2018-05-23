@@ -17,11 +17,11 @@
     </div>
     
       
-    <a class="item active menu-sports" >
+    <a class="item active sportslist" >
       My IHG Sports
     </a>
 
-    <a class="item menu-availability">
+    <a class="item availability">
       Availability
     </a>
     
@@ -31,7 +31,13 @@
 
   
   <div class="pusher" style = "margin-top: 20px">
-    
+    {{> Template.dynamic template=tab}}
+  </div>>
+
+
+  
+</body>
+<template name="sportslist"> 
 
   <header>
       <h2>I'm taking part in IHG for: </h2>
@@ -44,16 +50,13 @@
         {{> sport}}
       {{/each}}
     </div>
-  </div>
-
-</body>
+</template>
 
 <template name="sport">
   <div class="item">
     {{name}}
   </div>
 </template>
-
 
 
 
