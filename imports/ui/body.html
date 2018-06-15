@@ -1,5 +1,4 @@
 
-
 <body>
 
   <div class="ui inverted visible left sidebar vertical menu">
@@ -37,23 +36,26 @@
 
   
 </body>
+
 <template name="sportslist"> 
 
   <header>
       <h2>I'm taking part in IHG for: </h2>
       <div style= "margin-top: 0px"><h5> Select all that apply</h5>  </div>
-    </header>
+  </header>
     
 
-    <div class="ui middle aligned selection list">
-      {{#each sports}}
-        {{> sport}}
-      {{/each}}
-    </div>
+  <div class="ui middle aligned selection list">
+    {{#each sports}}
+      {{> sport}}
+    {{/each}}
+  </div>
+
+  <button class ="ui button">Submit </button>
 </template>
 
 <template name="sport">
-  <div class="item">
+  <div class="ui item {{#if active}}active{{/if}}" >
     {{name}}
   </div>
 </template>
