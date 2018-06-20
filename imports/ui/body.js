@@ -6,6 +6,8 @@ import './body.html';
 
 Template.body.onCreated( function() {	
   	Template.currentTab = new ReactiveVar( "sportslist" ); //new attribute created and ref
+    isConfirmed = new ReactiveVar (false);
+    console.log(isConfirmed);
 });
 
 Template.body.helpers({
@@ -35,11 +37,18 @@ Template.body.events({
 	
 })
 
+Template.sport.helpers({
+  confirmed: function(){
+    console.log(isConfirmed);
+    return isConfirmed;
+  }
+})
+
 Template.sport.events({
 	'click .item':function(){
 		Teams.update(this._id, {
       		$set: { active: ! this.active },
-    	});
+    });
 
 		//currentItem = event.target;
     	//$(currentItem).toggleClass('active');
@@ -49,12 +58,13 @@ Template.sport.events({
     		//})		//add to Teams collection 
     	//};
     	//console.log(Teams.find().fetch());
-    },
+  },
 })
 
 Template.sportslist.events({
 	'click .button':function(event, instance){
- 		
-    },
+ 		isConfirmed.set(true);
+    console.log(isConfirmed);
+  },
 })
 
