@@ -2,12 +2,16 @@ import { Template } from 'meteor/templating';
 
 import { Teams } from '../api/teams.js';
 
+import { Submit } from '../api/teams.js';
+
 import './body.html';
 
 Template.body.onCreated( function() {	
   	Template.currentTab = new ReactiveVar( "sportslist" ); //new attribute created and ref
-    isConfirmed = new ReactiveVar (false);
-    console.log(isConfirmed);
+    Session.set('value', false);//Submit.find().fetch().value ) doesnt load first
+    
+    //console.log(Submit.find().fetch());
+    //console.log(Submit.findOne({name:"name"}).value);
 });
 
 Template.body.helpers({
@@ -38,9 +42,8 @@ Template.body.events({
 })
 
 Template.sport.helpers({
-  confirmed: function(){
-    console.log(isConfirmed);
-    return isConfirmed;
+  disabled: function(){
+    return Session.get('value'); //return the boolean value
   }
 })
 
@@ -63,8 +66,12 @@ Template.sport.events({
 
 Template.sportslist.events({
 	'click .button':function(event, instance){
- 		isConfirmed.set(true);
-    console.log(isConfirmed);
+    var value = Submit.findOne({name:"name"})._id;
+ 		Submit.update(value, {
+          $set: { value: true },
+    });
+    console.log(Submit.findOne({name:"name"}).value); //true
+    Session.set( 'value',true );
   },
 })
 
