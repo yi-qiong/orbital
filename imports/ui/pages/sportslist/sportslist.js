@@ -1,10 +1,10 @@
 import { Template } from 'meteor/templating';
 
-import { Teams } from '../api/teams.js';
+import { Teams } from '/imports/api/teams.js';
 
-import { Submit } from '../api/teams.js';
+import { Submit } from '/imports/api/teams.js';
 
-import './body.html';
+import './sportslist.html';
 
 Template.body.onCreated( function() {	
   	Template.currentTab = new ReactiveVar( "sportslist" ); //new attribute created and ref

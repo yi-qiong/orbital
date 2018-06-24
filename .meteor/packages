@@ -23,3 +23,5 @@ semantic:ui
 flemay:less-autoprefixer
 jquery
 session
+accounts-ui
+accounts-password
