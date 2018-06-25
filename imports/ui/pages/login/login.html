@@ -1,17 +1,20 @@
-// doesnt work at the moment due to routing, code copied into main.html in client
+
 <body>
 
-{{> loginButtons}}
+<br>
 
-{{#if currentUser}}
-  	Set-up routing to direct to next page?
-
-
-{{/if}}
-
-
-
+<div class="ui container">
+{{>myLogin}}
+</div>
 
 
 </body>
 
+<template name="myLogin">
+ {{#if atDisabled}}
+  Please wait...
+ {{/if}}
+ <div class="{{atClass}}">
+  {{> atForm}}
+ </div>
+</template>

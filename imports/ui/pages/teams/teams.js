@@ -2,16 +2,13 @@ import { Template } from 'meteor/templating';
 
 import { Teams } from '/imports/api/teams.js';
 
-import { Submit } from '/imports/api/teams.js';
 
-import './sportslist.html';
+import './teams.html';
 
 Template.body.onCreated( function() {	
-  	Template.currentTab = new ReactiveVar( "sportslist" ); //new attribute created and ref
+  	Template.currentTab = new ReactiveVar( "teams" ); //new attribute created and ref
     Session.set('value', false);//Submit.find().fetch().value ) doesnt load first
-    
-    //console.log(Submit.find().fetch());
-    //console.log(Submit.findOne({name:"name"}).value);
+
 });
 
 Template.body.helpers({
@@ -21,7 +18,7 @@ Template.body.helpers({
   	},
 });
 
-Template.sportslist.helpers({
+Template.list.helpers({
   	sports: function() {
   		return Teams.find();
   	},
@@ -30,12 +27,12 @@ Template.sportslist.helpers({
 Template.body.events({
 	'click .sportslist':function(event, template){
     	$('.availability').removeClass('active');
-        $('.sportslist').addClass('active');
+        $('.teams').addClass('active');
         Template.currentTab.set( "sportslist" );
     },
     'click .availability':function(event, template){
     	$('.sportslist').removeClass('active');
-        $('.availability').addClass('active');
+        $('.teams').addClass('active');
         Template.currentTab.set( "availability" );
     },
 	
