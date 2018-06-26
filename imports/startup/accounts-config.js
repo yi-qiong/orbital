@@ -12,9 +12,9 @@ AccountsTemplates.configure({
     confirmPassword: false,
     enablePasswordChange: true,
     forbidClientAccountCreation: false,
-    enforceEmailVerification: true,
+    //enforceEmailVerification: true,
     overrideLoginErrors: true,
-    sendVerificationEmail: true,
+    //sendVerificationEmail: true,
     focusFirstInput: true,
 
     // Appearance

@@ -1,7 +1,7 @@
 /*add the insert method that we'll ultimately call from the client to handle inserting our appointments into the database*/
 
 import {Meteor} from 'meteor/meteor';
-import {Appointments} from '../../../imports/api/availability.js';
+import {Appointments} from '/imports/api/availability.js';
 
 Meteor.methods({
   indicateAvailability( availability ) {
