@@ -4,8 +4,8 @@
       <h4 class="page-header">Select date and time unavailable</h4>
       {{> addAppointment}}
       <ul class="list-group appointments-list">
-        {{#each appointments}} //output list of dates that have input
-          <li class="list-group-item">{{dateTime timestamp}}</li> //using dateTime global helper to format date and time before output to client
+        {{#each appointments}}
+          <li class="list-group-item">Blaze._globalHelpers['dateTime'] </li>
         {{/each}}
       </ul>
     </div>
