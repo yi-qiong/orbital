@@ -1,17 +1,54 @@
 <template name="addAppointment">
   <form id="add-appointment">
-    <div class="row">
-      <div class="col-xs-8">
-        <div class="form-group">
-        /*datetimepicker as class to select the input later & data-DateTimePicker as attribute*/
-          <input type="text" class="form-control datetimepicker" data-DateTimePicker name="appointment" placeholder="Pick a Date">
-        </div>
-      </div>
-      <div class="col-xs-4">
-        <div class="form-group">
-          <button class="btn btn-success btn-block"> Block Out Date </button>
-        </div>
-      </div>
+
+<div class='col-sm-6'>
+  <div class="form-group">
+    <div class='input-group date' id="datepicker">
+      <input type='text' class="form-control" name="datePicker" data-DateTimePicker="date" placeholder="Pick a Date" title="Pick a Date"/>
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
     </div>
+  </div>
+</div>
+
+<div class='col-sm-6'>
+  <div class="form-group">
+     <button class="ui positive button wholeDay">Select whole day not free</button>
+  </div>
+</div>
+
+<br>  
+<br> 
+
+<div class='col-sm-6'>
+  <div class="form-group">
+    <div class='input-group date' id="start_time">
+      <input type='text' class="form-control" name="startTime" data-DateTimePicker="startTime" placeholder="Start Time" title="Start Time"/>
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class='col-sm-6'>
+  <div class="form-group">
+    <div class='input-group date' id="end_time">
+      <input type='text' class="form-control" name="endTime" data-DateTimePicker="endTime" placeholder="End Time" title="End Time"/> 
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-time"></span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class='col-sm-6'>
+  <div class="form-group">
+    <input type="submit" class="btn btn-success btn-block" id="blockout" value="Block Out Date">
+  </div>
+</div>
+
   </form>
+  
 </template>
