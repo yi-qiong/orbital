@@ -1,74 +1,118 @@
-import { Template } from 'meteor/templating';
-
-import { Teams } from '/imports/api/teams.js';
-
+import {Template} from 'meteor/templating';
 
 import './teams.html';
 
-Template.body.onCreated( function() {	
-  	Template.currentTab = new ReactiveVar( "teams" ); //new attribute created and ref
-    Session.set('value', false);//Submit.find().fetch().value ) doesnt load first
-
+Template.body.onCreated(function() {
+  Template.currentTab = new ReactiveVar("teams"); //new attribute created and ref
 });
 
 Template.body.helpers({
-  	tab: function() {
-    	console.log(Template.currentTab.get()); //getter method for current active tab
-  		return Template.currentTab.get();
-  	},
+  tab: function() {
+    console.log(Template.currentTab.get()); //getter method for current active tab
+    return Template.currentTab.get();
+  },
 });
 
-Template.list.helpers({
-  	sports: function() {
-  		return Teams.find();
-  	},
-});
 
 Template.body.events({
-	'click .sportslist':function(event, template){
-    	$('.availability').removeClass('active');
-        $('.teams').addClass('active');
-        Template.currentTab.set( "sportslist" );
-    },
-    'click .availability':function(event, template){
-    	$('.sportslist').removeClass('active');
-        $('.teams').addClass('active');
-        Template.currentTab.set( "availability" );
-    },
-	
-})
+  'click .teams': function(event, template) {
+    $('.availability').removeClass('active');
+    $('.teams').addClass('active');
+    Template.currentTab.set("teams");
+  },
+  'click .availability': function(event, template) {
+    $('.teams').removeClass('active');
+    $('.availability').addClass('active');
+    Template.currentTab.set("availability");
+  },
 
-Template.sport.helpers({
+})
+////////////////////////////////////////////////// form
+$('.ui.dropdown')
+  .dropdown()
+;//initialise dropdown
+
+
+$('.ui.form')
+  .form({
+    fields : {
+      hall:'empty',
+      gender: 'empty',
+      teams: 'empty'
+    },
+    inline : true,
+  }) //validation rules: all fields cannot be empty
+;
+
+Tracker.autorun(function () {
+    Meteor.subscribe("userInfo");
+});
+
+Template.teams.onCreated(function() {
+  var disabled = new ReactiveVar("disabled"); //havent chose gender
+});
+
+Template.teams.helpers({
+  submitted: function() {
+    return Meteor.user().submittedTeamForm; // METEOR PUBLISH NEEDED AND SUBSCRIBE
+  },
   disabled: function(){
-    return Session.get('value'); //return the boolean value
+    return disabled; //ensure chose gender first
+  },
+  isFemale: function() {
+    if (gender.equals("female")) {
+      return true;
+    }else{
+      return false;
+    }
   }
 })
 
-Template.sport.events({
-	'click .item':function(){
-		Teams.update(this._id, {
-      		$set: { active: ! this.active },
-    });
 
-		//currentItem = event.target;
-    	//$(currentItem).toggleClass('active');
-    	//if ($(currentItem).hasClass('active')){
-    		//Teams.insert({
-    			//name: $(currentItem).text(),
-    		//})		//add to Teams collection 
-    	//};
-    	//console.log(Teams.find().fetch());
+
+Template.teams.events({
+  'submit form': function(event, instance) {
+    event.preventDefault();
+    if(Meteor.user()){//if logged in
+      $('.ui.form').form('validate form');
+      if( $('.ui.form').form('is valid')) {
+        Meteor.call("submitTeamForm", function (error) {
+          if (error && error.error === "logged-out") {
+            // show a nice error message
+            Session.set("errorMessage", "Please log in before submitting your details.");
+          }
+        });
+      }
+    }  
   },
+  'change #gender':function(event, instance){
+    var gender = $('.get.form').form('get value', 'gender'); 
+    disabled.set(""); //unlock teams field
+  },
+  
+  'click #teams': function(event, instance) { 
+    if (disabled){
+      Session.set("errorMessage", "Please indicate your gender first.");
+    }
+   }
 })
 
-Template.sportslist.events({
+Template.teams.events({
 	'click .button':function(event, instance){
-    var value = Submit.findOne({name:"name"})._id;
- 		Submit.update(value, {
-          $set: { value: true },
+ 		Meteor.call("submitTeamForm", function (error) {
+      if (error && error.error === "logged-out") {
+        // show a nice error message
+        Session.set("errorMessage", "Please log in before submitting your details.");
+      }
     });
-    console.log(Submit.findOne({name:"name"}).value); //true
-    Session.set( 'value',true );
   },
-})
+  //$('.dropdown').change(function () {
+    //var gender = this.value; //get the choosen input from the gender field !! undone 
+  //}),
+  'click .dropdown':function(event, instance){ //put for teams field only !! undone
+    var gender = $('.get.form').form('get value', 'gender');
+    if (gender == null){
+      Session.set("errorMessage", "Please indicate your gender first.");
+    }
 
+})
