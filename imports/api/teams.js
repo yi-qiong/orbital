@@ -2,22 +2,26 @@
 import {Meteor} from 'meteor/meteor';
 import { Mongo} from 'meteor/mongo';
 
-Meteor.publish('userInfo', function () {
-  return Meteor.users.find(this.userId, {
-    fields: {
-    submittedTeamForm:1,
-    hall:1,
-    teams:1
-    }
+if(Meteor.isServer){
+
+  Meteor.publish('userInfo', function () {
+    return Meteor.users.find(this.userId, {
+      fields: {
+      submittedTeamForm:1,
+      hall:1,
+      teams:1
+      }
+    });
   });
-});
+}
 
 Meteor.methods({
-  'submitTeamForm' () {
+  'submitTeamForm': function() {
     // Make sure the user is logged in 
     if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
     }
+    console.log("meteor methods");
     var $form = $('.get. form');
     var hall = $form.form('get value', 'hall');
     var gender = $form.form('get value', 'gender');

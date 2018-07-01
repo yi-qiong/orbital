@@ -30,9 +30,10 @@
         </div>  
       </div>
 
+        <div id="teams">
         <div class="{{disabled}} field">
           <label>Teams</label>
-          <select name="teams" multiple="" class="ui dropdown" id="teams">
+          <select name="teams" multiple="" class="ui dropdown">
             <option value="">Select Teams</option>
             
             {{#if isFemale}} <!--reactive rendering based on gender field chosen-->
@@ -73,9 +74,17 @@
             <option value="Volleyball(M)">Volleyball(M)</option>
 
             {{/if}}
-            </select>  
+          </select>  
+        </div>  
         </div>  
     <br>
     <div class="ui right floated primary submit button">Submit</div>
+    <br>
+    <br>
+    <div class="ui success message">
+        <div class="header">Form Completed</div>
+        <p>You are now not allowed to change any form details.</p>
+    </div>
+
   </form>
 </template>
