@@ -29,7 +29,7 @@ Template.sidebar.events({
     $('.teams').removeClass('active');
     $('.availability').addClass('active');
     Template.currentTab.set("availability");
-  
+    Router.go('/availability')
   },
 
 })
