@@ -1,6 +1,7 @@
 <template name="sidebar">
-  {{#if currentUser}}
-  <div class="ui inverted visible left sidebar vertical menu">
+  {{#if currentUser}} <!--ensure logged in-->
+
+  <div class="ui overlay inverted visible left sidebar vertical menu">
     <div class="header item" style="padding-top:25px">
       <header>
         <h3> Name </h3>
@@ -18,9 +19,15 @@
     <a class="item availability">
       Availability
     </a>
+    {{atNavButton}}
   </div>
-  <div class="pusher" style="margin-top: 20px">
-    {{> Template.dynamic template=tab}}
-  </div>>
+
+
+  <div class="pusher" style="margin-top: 20px; width: calc(100% - 210px); margin-left: 210px">
+    <div class = "ui container segment">
+      {{> Template.dynamic template=tab}}
+    </div>
+  </div>
   {{/if}}
+  
 </template>

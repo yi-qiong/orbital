@@ -23,7 +23,8 @@ Tracker.autorun(function () {
 });
 
 Template.teams.onCreated(function() {
-  var disabled = new ReactiveVar("disabled"); //havent chose gender
+  this.disabled = new ReactiveVar("disabled"); //havent chose gender
+  this.isFemale = new ReactiveVar(false);
 });
 
 Template.teams.helpers({
@@ -31,21 +32,18 @@ Template.teams.helpers({
     return Meteor.user().submittedTeamForm; // METEOR PUBLISH NEEDED AND SUBSCRIBE
   },
   disabled: function(){
-    return disabled; //ensure chose gender first
+    return Template.instance().disabled.get(); //ensure chose gender first
   },
   isFemale: function() {
-    if (gender.equals("female")) {
-      return true;
-    }else{
-      return false;
-    }
+    //console.log(Template.instance().isFemale.get());
+    return Template.instance().isFemale.get();
   }
 })
 
 
 
 Template.teams.events({
-  'submit form': function(event, instance) {
+  'submit form': function(event, template) {
     event.preventDefault();
     if(Meteor.user()){//if logged in
       $('.ui.form').form('validate form');
@@ -59,34 +57,20 @@ Template.teams.events({
       }
     }  
   },
-  'change #gender':function(event, instance){
-    var gender = $('.get.form').form('get value', 'gender'); 
-    disabled.set(""); //unlock teams field
+  'change #gender':function(event, template){
+    var gender = $('.ui.form').form('get value', 'gender');
+    //console.log(gender); // male/female
+    if (gender ==="female"){
+      template.isFemale.set(true); 
+    }else {
+      template.isFemale.set(false);
+    }
+    template.disabled.set(""); //unlock teams field
   },
   
-  'click #teams': function(event, instance) { 
+  'click #teams': function(event, template) { 
     if (disabled){
       Session.set("errorMessage", "Please indicate your gender first.");
     }
    }
-})
-
-Template.teams.events({
-  'click .button':function(event, instance){
-    Meteor.call("submitTeamForm", function (error) {
-      if (error && error.error === "logged-out") {
-        // show a nice error message
-        Session.set("errorMessage", "Please log in before submitting your details.");
-      }
-    });
-  },
-  //$('.dropdown').change(function () {
-    //var gender = this.value; //get the choosen input from the gender field !! undone 
-  //}),
-  'click .dropdown':function(event, instance){ //put for teams field only !! undone
-    var gender = $('.get.form').form('get value', 'gender');
-    if (gender == null){
-      Session.set("errorMessage", "Please indicate your gender first.");
-    }
-  }
 })

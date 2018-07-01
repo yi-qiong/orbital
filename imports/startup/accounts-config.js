@@ -1,13 +1,11 @@
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 
 
-Accounts.config({     //if later on we switch from accounts-ui to useraccounts:semantic-ui nid to rewrite 
-  //forbidClientAccountCreation: false,
-  
+Accounts.config({ //accounts-password
   restrictCreationByEmailDomain: 'u.nus.edu',
 });
 
-AccountsTemplates.configure({
+AccountsTemplates.configure({ //useraccounts
     // Behavior
     confirmPassword: false,
     enablePasswordChange: true,
@@ -38,14 +36,14 @@ AccountsTemplates.configure({
 
     // Hooks
     //onLogoutHook: myLogoutFunc,
-    //onSubmitHook: mySubmitFunc,
+    //onSubmitHook: mySubmitFunc, //can be used for routing?? idk
     //preSignUpHook: myPreSubmitFunc,
     //postSignUpHook: myPostSubmitFunc,
 
     // Texts
     texts: {
       button: {
-          signUp: "Sign up"
+          signUp: "Register"
       },
 
       title: {
@@ -66,3 +64,8 @@ AccountsTemplates.configure({
     //}
   //}
 //
+
+//var myPostLogout = function(){
+    //example redirect after logout
+    //Router.go('/home');
+//};
