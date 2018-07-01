@@ -11,5 +11,13 @@ Template.playerLogin.helpers({
  },
  atClass: function() {
   return AccountsTemplates.disabled() ? 'disabled' : 'active';
+ },
+
+ loginStatus: function() {
+ 	if (Meteor.user()) {
+ 		return Router.go('/sports')
+ 	}
  }
 });
+
+
