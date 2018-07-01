@@ -1,0 +1,26 @@
+<template name="sidebar">
+  {{#if currentUser}}
+  <div class="ui inverted visible left sidebar vertical menu">
+    <div class="header item" style="padding-top:25px">
+      <header>
+        <h3> Name </h3>
+      </header>
+      <h4>
+        NusNet ID <br>
+        <br>
+      </h4>
+    </div>
+
+    <a class="item active teams">
+      Sports Teams
+    </a>
+
+    <a class="item availability">
+      Availability
+    </a>
+  </div>
+  <div class="pusher" style="margin-top: 20px">
+    {{> Template.dynamic template=tab}}
+  </div>>
+  {{/if}}
+</template>
