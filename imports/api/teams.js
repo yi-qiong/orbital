@@ -2,19 +2,6 @@
 import {Meteor} from 'meteor/meteor';
 import { Mongo} from 'meteor/mongo';
 
-if(Meteor.isServer){
-
-  Meteor.publish('userInfo', function () {
-    return Meteor.users.find(this.userId, {
-      fields: {
-      submittedTeamForm:1,
-      hall:1,
-      teams:1
-      }
-    });
-  });
-}
-
 Meteor.methods({
   'submitTeamForm': function() {
     // Make sure the user is logged in 
