@@ -1,0 +1,80 @@
+<template name="scheduler">
+    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:600px;'>
+      <div class="dhx_cal_navline">
+      <div class="dhx_cal_prev_button">&nbsp;</div>
+      <div class="dhx_cal_next_button">&nbsp;</div>
+      <div class="dhx_cal_today_button"></div>
+      <div class="dhx_cal_date"></div>
+      <div class="dhx_cal_tab" name="week_tab" style="right:268px;"></div>
+      </div>
+      <div class="dhx_cal_header">
+      </div>
+      <div class="dhx_cal_data">
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+    <div class='col-sm-4'>
+      <div class="field">
+      <select class="ui fluid dropdown" id="dropdown" name="hall">
+        <option value="" disabled selected>Hall of Residence</option>
+        <option value="Eusoff">Eusoff Hall</option>
+        <option value="Kent Ridge">Kent Ridge Hall</option>
+        <option value="King Edward VII">King Edward VII Hall</option>
+        <option value="Raffles">Raffles Hall</option>
+        <option value="Sheares">Sheares Hall</option>
+        <option value="Temasek">Temasek Hall</option>
+        <option value="PGP">PGP House</option>
+      </select>
+    </div>
+  </div>
+    
+  <div class='col-sm-4'>
+    <div class="field">
+      <select class="ui fluid dropdown" id="dropdown" name="sports">
+        <option hidden selected>Select Team</option>
+        <option value="Badminton(F)">Badminton(F)</option>
+        <option value="Basketball(F)">Basketball(F)</option>
+        <option value="Floorball(F)">Floorball(F)</option>
+        <option value="Frisbee">Frisbee</option>
+        <option value="Handball(F)">Handball(F)</option>
+        <option value="Netball">Netball</option>
+        <option value="Road Relay">Road Relay</option>
+        <option value="Soccer(F)">Soccer(F)</option>
+        <option value="Softball">Softball</option>
+        <option value="Squash(F)">Squash(F)</option>        
+        <option value="Swimming(F)">Swimming(F)</option>
+        <option value="Table Tennis(F)">Table Tennis(F)</option>
+        <option value="Tennis(F)">Tennis(F)</option>
+        <option value="Touch Rugby(F)">Touch Rugby(F)</option>
+        <option value="Track and Field">Track and Field</option>
+        <option value="Volleyball(F)">Volleyball(F)</option>
+        <option value="Badminton(M)">Badminton(M)</option>
+        <option value="Basketball(M)">Basketball(M)</option>
+        <option value="Floorball(M)">Floorball(M)</option>
+        <option value="Frisbee">Frisbee</option>
+        <option value="Handball(M)">Handball(M)</option>
+        <option value="Road Relay">Road Relay</option>
+        <option value="Sepak Takraw">Sepak Takraw</option>
+        <option value="Soccer(M)">Soccer(M)</option>
+        <option value="Softball">Softball</option>
+        <option value="Squash(M)">Squash(M)</option>        
+        <option value="Swimming(M)">Swimming(M)</option>
+        <option value="Table Tennis(M)">Table Tennis(M)</option>
+        <option value="Tennis(M)">Tennis(M)</option>
+        <option value="Touch Rugby(M)">Touch Rugby(M)</option>
+        <option value="Track and Field">Track and Field</option>
+        <option value="Volleyball(M)">Volleyball(M)</option>
+           </select>
+    </div>
+  </div>
+    <div class='col-sm-4'>
+      <button class="ui button" id="backbtn">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>
+</template>
