@@ -1,6 +1,7 @@
 import {Template} from 'meteor/templating';
 import './teams.html';
 import '/imports/api/teams.js';
+import {Meteor} from 'meteor/meteor';
 
 ////////////////////////////////////////////////// form
 Template.teams.rendered = function() {
