@@ -1,7 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import {Template} from 'meteor/templating';
 import './teams.html';
-import '/lib/formMethods.js';
+import '../../imports/api/teams.js';
 
 
 ////////////////////////////////////////////////// form
