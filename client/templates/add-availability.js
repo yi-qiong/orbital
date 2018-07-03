@@ -23,7 +23,7 @@ Template.addAppointment.onRendered( () => {
 Router.route('/availability', {
     template: 'addAppointment'
   });
-});
+}); //this one i try to delete but app crashes
 
 Template.addAppointment.onCreated( () => {
   let template = Template.instance();

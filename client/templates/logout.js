@@ -5,11 +5,14 @@ Router.route('/logout', {
 	template: 'logout'
 })
 
-Template.logout.events({
-'click #login': function() {
-    Router.go('/playerLogin')
-  },
-  'click #home': function() {
-  	Router.go('/')
-  }
-});
+Template.logout.rendered=function(){
+  $('.message .close')
+  .on('click', function() {
+    $(this)
+      .closest('.message')
+      .transition('fade')
+    ;
+  })
+;
+};
+

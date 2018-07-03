@@ -32,7 +32,15 @@ Template.teams.rendered = function() {
     inline : true,
     onSuccess: function(event, fields){
       event.preventDefault();
-      Meteor.call("submitTeamForm", function (error) {
+      var $form = $('.ui.form');
+      //var hall = $form.form('get value', 'hall');
+      //var gender = $form.form('get value', 'gender');
+      //var teams = $form.form('get value', 'teams');
+      Meteor.call('submitTeamForm', {
+        hall: $form.form('get value', 'hall'),
+        gender: $form.form('get value', 'gender'),
+        teams: $form.form('get value', 'teams'),
+      }, function (error) {
           console.log("meteor.call working");
           if (error && error.error === "logged-out") {
             // show a nice error message
@@ -60,8 +68,9 @@ Template.teams.onCreated(function() {
 
 Template.teams.helpers({
   submitted: function() {
-    console.log(Meteor.user().submittedTeamForm);
-    return Meteor.user().submittedTeamForm; // METEOR PUBLISH NEEDED AND SUBSCRIBE
+    if (Meteor.user().submittedTeamForm){
+      return "disabled";
+    }// METEOR PUBLISH NEEDED AND SUBSCRIBE
   },
   disabled: function(){
     return Template.instance().disabled.get(); //ensure chose gender first
@@ -93,3 +102,4 @@ Template.teams.events({
     }
    }
 })
+ 

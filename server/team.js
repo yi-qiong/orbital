@@ -10,4 +10,4 @@ Meteor.publish('userInfo', function () {
       teams:1
     }
   });
-});
+}); 

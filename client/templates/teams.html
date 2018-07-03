@@ -4,13 +4,12 @@
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
       <h4 class="page-header">Let us know which teams you are representing in IHG!</h4>
-    
-  <form class="ui form {{#if submitted}} disabled {{/if}}">
-      <br>
+   
+  <form class="ui form">
 
       <div class="two fields">
 
-        <div class="field">
+        <div class="{{submitted}} field">
           <label>Hall of Residence</label>
           <select class="ui dropdown" name="hall">
             <option value="">Hall of Residence</option>
@@ -25,7 +24,7 @@
         </div>
 
 
-        <div class="field">
+        <div class="{{submitted}} field">
           <label>Gender</label>
           <select class="ui dropdown" name="gender" id="gender">
             <option value="">Gender</option>
@@ -36,7 +35,7 @@
       </div>
 
         <div id="teams">
-        <div class="{{disabled}} field">
+        <div class="{{disabled}} {{submitted}} field">
           <label>Teams</label>
           <select name="teams" multiple="" class="ui dropdown">
             <option value="">Select Teams</option>
@@ -83,7 +82,7 @@
         </div>  
         </div>  
     <br>
-    <div class="ui right floated primary submit button">Submit</div>
+    <div class="ui right floated primary submit button {{submitted}}">Submit</div>
     <br>
     <br>
     <div class="ui success message">
