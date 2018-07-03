@@ -2,7 +2,7 @@ import {Template} from 'meteor/templating';
 import './sidebar.html';
 
 
-Router.route('/sports', {
+Router.route('/playerPage', {
   template: 'sidebar'
 });
 
@@ -28,8 +28,10 @@ Template.sidebar.events({
   'click .availability': function(event, template) {
     $('.teams').removeClass('active');
     $('.availability').addClass('active');
-    Template.currentTab.set("availability");
-    Router.go('/availability')
+    Template.currentTab.set("appointments");
   },
-
+  'click #at-nav-button': function(){
+    Meteor.logout();
+    Router.go('/logout');
+  },
 })

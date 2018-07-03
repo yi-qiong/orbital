@@ -2,9 +2,6 @@ import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import {Availability} from '../../imports/api/availability.js'
 
-Router.route('/availability', {
-	template: 'appointments'
-});
 
 Template.appointments.onCreated( () => {
   let template = Template.instance();
@@ -20,12 +17,3 @@ Template.appointments.helpers({
   }
 });
 
-Template.appointments.events({
-'click #backbtn': function() {
-    Router.go('/sports')
-  },
-  'click #logout': function() {
-  	Meteor.logout();
-  	Router.go('/logout')
-  }
-});

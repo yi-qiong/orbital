@@ -15,7 +15,7 @@ Template.playerLogin.helpers({
 
  loginStatus: function() {
  	if (Meteor.user()) {
- 		return Router.go('/sports')
+ 		return Router.go('/playerPage')
  	}
  }
 });

@@ -2,6 +2,7 @@
   {{#if currentUser}} <!--ensure logged in-->
 
   <div class="ui overlay inverted visible left sidebar vertical menu">
+
     <div class="header item" style="padding-top:25px">
       <header>
         <h3> Name </h3>
@@ -13,13 +14,19 @@
     </div>
 
     <a class="item active teams">
-      Sports Teams
+      <i class="volleyball ball icon "></i> Sports Teams 
     </a>
 
     <a class="item availability">
-      Availability
+      <i class="calendar alternate outline icon"></i> Availability 
     </a>
-    {{atNavButton}}
+      <br style="line-height:15">
+    <div >
+
+      {{> atNavButton}}
+      
+    </div>
+
   </div>
 
 

@@ -8,8 +8,15 @@ Meteor.methods({
     if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
     }
-    console.log("meteor methods");
-    var $form = $('.get. form');
+    if (Meteor.isSimulation){
+      console.log("meteor methods simulation");
+    }
+
+    if (Meteor.isServer){
+      console.log("meteor methods server");
+    }
+    
+    var $form = $('.ui.form');
     var hall = $form.form('get value', 'hall');
     var gender = $form.form('get value', 'gender');
     var teams = $form.form('get value', 'teams');
