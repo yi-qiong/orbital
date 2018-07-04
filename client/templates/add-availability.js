@@ -57,27 +57,27 @@ Template.addAppointment.events({
 
     //if all fields empty, present error. 
     if (selectedDate == "" && startTime == "" && endTime == "") {
-      Bert.alert('Form is empty!')
+      Bert.alert('Form is empty!', 'danger')
     }
 
     //did not choose date
     if (selectedDate == "") {
-      Bert.alert('Date not indicated!')
+      Bert.alert('Date not indicated!', 'danger')
     }
 
     //date and start time not indicated
     if (selectedDate == "" && startTime == "") {
-      Bert.alert('Date and Start Time not indicated!')
+      Bert.alert('Date and Start Time not indicated!', 'danger')
     }
 
     //date and start time not indicated
     if (selectedDate == "" && endTime == "") {
-      Bert.alert('Date and End Time not indicated!')
+      Bert.alert('Date and End Time not indicated!', 'danger')
     }
 
     //did not indicate whole day not free and did not indicate start & end time
     if (startTime == "" && endTime =="" && !($('#availability').checkbox('is checked'))) { 
-      Bert.alert('Start and End Time not indicated!')
+      Bert.alert('Start and End Time not indicated!', 'danger')
     }
 
     //call insert method when user inputs all fields or indicate whole day not free
