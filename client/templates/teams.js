@@ -3,7 +3,15 @@ import {Template} from 'meteor/templating';
 import './teams.html';
 import '/imports/api/teams.js';
 
-////////////////////////////////////////////////// form
+Template.teams.onCreated(function() {
+  this.disabled = new ReactiveVar("disabled"); //havent chose gender
+  this.isFemale = new ReactiveVar(false);
+});
+
+Tracker.autorun(function () {
+    Meteor.subscribe("userInfo");
+});
+
 Template.teams.rendered = function() {
   // be sure to use this.$ so it is scoped to the template instead of to the window
   this.$('.ui.dropdown').dropdown({on: 'hover'});
@@ -33,13 +41,13 @@ Template.teams.rendered = function() {
     onSuccess: function(event, fields){
       event.preventDefault();
       var $form = $('.ui.form');
-      //var hall = $form.form('get value', 'hall');
-      //var gender = $form.form('get value', 'gender');
-      //var teams = $form.form('get value', 'teams');
+      var hall = $form.form('get value', 'hall');
+      var gender = $form.form('get value', 'gender');
+      var teams = $form.form('get value', 'teams');
       Meteor.call('submitTeamForm', {
-        hall: $form.form('get value', 'hall'),
-        gender: $form.form('get value', 'gender'),
-        teams: $form.form('get value', 'teams'),
+        hall: hall,
+        gender: gender,
+        teams: teams,
       }, function (error) {
           console.log("meteor.call working");
           if (error && error.error === "logged-out") {
@@ -54,18 +62,6 @@ Template.teams.rendered = function() {
 };
 
 
-Tracker.autorun(function () {
-    Meteor.subscribe("userInfo");
-});
-
-
-Template.teams.onCreated(function() {
-  this.disabled = new ReactiveVar("disabled"); //havent chose gender
-  this.isFemale = new ReactiveVar(false);
-
-
-});
-
 Template.teams.helpers({
   submitted: function() {
     if (Meteor.user().submittedTeamForm){
@@ -78,6 +74,32 @@ Template.teams.helpers({
   isFemale: function() {
     //console.log(Template.instance().isFemale.get());
     return Template.instance().isFemale.get();
+  },
+  hall(){
+    if (Meteor.user().submittedTeamForm){
+      return Meteor.user().hall;
+    } else {
+      return "Hall of Residence";
+    }
+  },
+  gender(){
+    if (Meteor.user().submittedTeamForm){
+      return Meteor.user().gender;
+    } else {
+      return "Gender";
+    }
+  },
+  teams(){
+    if (Meteor.user().submittedTeamForm){
+      return Meteor.user().teams;
+    } else {
+      return "Select Teams";
+    }
+  },
+  hidden(){
+    if (! Meteor.user().submittedTeamForm){
+      return "hidden";
+    }
   }
 })
 
@@ -85,9 +107,8 @@ Template.teams.helpers({
 
 Template.teams.events({
   'change #gender':function(event, template){
-    var gender = $('.ui.form').form('get value', 'gender');
-    //console.log(gender); // male/female
-    if (gender ==="female"){
+    var gender = $('.ui.form').form('get value', 'gender'); 
+    if (gender === "Female"){
       template.isFemale.set(true); 
     }else {
       template.isFemale.set(false);
@@ -95,7 +116,8 @@ Template.teams.events({
     template.disabled.set(""); //unlock teams field
     //console.log(template.disabled.get());
   },
-  
+
+ 
   'click #teams': function(event, template) { 
     if (template.disabled.get()=== "disabled"){
       $('.ui.form').form('validate field','gender'); //prompt 

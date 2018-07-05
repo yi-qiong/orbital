@@ -13,7 +13,7 @@ Meteor.methods({
     }
 
     if (this.isServer){
-      console.log("meteor methods server");
+      console.log("meteor methods server"); //idk why this line doesnt come out
     }
     
     Meteor.users.update(Meteor.userId(), { //update field in user docs

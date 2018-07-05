@@ -11,8 +11,8 @@
 
         <div class="{{submitted}} field">
           <label>Hall of Residence</label>
-          <select class="ui dropdown" name="hall">
-            <option value="">Hall of Residence</option>
+          <select class="ui dropdown" name="hall" id="hall">
+            <option value="">{{hall}}</option>
             <option value="Eusoff">Eusoff Hall</option>
             <option value="Kent Ridge">Kent Ridge Hall</option>
             <option value="King Edward VII">King Edward VII Hall</option>
@@ -27,9 +27,9 @@
         <div class="{{submitted}} field">
           <label>Gender</label>
           <select class="ui dropdown" name="gender" id="gender">
-            <option value="">Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="">{{gender}}</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
         </div>  
       </div>
@@ -37,8 +37,8 @@
         <div id="teams">
         <div class="{{disabled}} {{submitted}} field">
           <label>Teams</label>
-          <select name="teams" multiple="" class="ui dropdown">
-            <option value="">Select Teams</option>
+          <select name="teams" multiple="" class="ui dropdown" id="teams">
+            <option value="">{{teams}}</option>
             
             {{#if isFemale}} <!--reactive rendering based on gender field chosen-->
             <option value="Badminton(F)">Badminton(F)</option>
@@ -85,7 +85,7 @@
     <div class="ui right floated primary submit button {{submitted}}">Submit</div>
     <br>
     <br>
-    <div class="ui success message">
+    <div class="ui positive message {{hidden}}">
         <div class="header">Form Completed</div>
         <p>You are now not allowed to change any form details.</p>
     </div>
