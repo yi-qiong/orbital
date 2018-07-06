@@ -10,7 +10,7 @@ Template.addAppointment.onRendered( () => {
     timeZone: 'SGT',
     minDate: new Date(), //disable past dates and only show date starting from the current date
     format: 'YYYY-MM-DD'
-  });
+  }); 
 
   $('#start_time').datetimepicker({
     format: 'hh:mm A',
@@ -32,6 +32,8 @@ Template.addAppointment.events({
   if ($('#availability').checkbox('is checked')) {
         event.preventDefault();
      //disable timepicker when button is toggled
+      $('#start_time').datetimepicker.value(''); //how to set the value? whats the syntax
+      $('#end_time').datetimepicker.value('');
       $('#start_time').datetimepicker('disable');
       $('#end_time').datetimepicker('disable');
     } else {
@@ -98,3 +100,11 @@ Template.addAppointment.events({
   }
 });
 
+Template.addAppointment.helpers({
+  help(){
+    
+      //Availability.findOne({owner: Meteor.userID(), date: selectedDate}).start();
+        
+    
+  }
+});

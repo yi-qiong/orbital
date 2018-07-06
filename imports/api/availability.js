@@ -3,7 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
 
 
-export const Availability = new Mongo.Collection( 'availability' );
+export const Availability = new Mongo.Collection('availability');
 
 Availability.allow({
   insert: () => false,
@@ -17,17 +17,8 @@ Availability.deny({
   remove: () => true
 });
 
-//if(Meteor.isServer) {
-	//Meteor.publish( 'availability', function() { 
-  //return Availability.find({ //only publish blocked out dates of user
-  	//$or: [
-  	//{private: {$ne: true}},
-  	//{owner: this.userId},
-  	//]
-  //})
-//});
 
-  Meteor.methods({
+Meteor.methods({
   'indicateAvailability'( selectedDate, startTime, endTime ) {
     check(selectedDate, String );
     check(startTime, String);
@@ -37,10 +28,9 @@ Availability.deny({
       date: selectedDate,
       start: startTime,
       end: endTime,
-      createdAt: new Date(),
-      //owner: Meteor.userId(),
-      //username: Meteor.user().username,
-    })
+      owner: Meteor.userId(),
+      username: Meteor.user().username,
+    });
   }
 });
 //}
