@@ -1,20 +1,20 @@
 import {Meteor} from 'meteor/meteor';
-import { Template } from 'meteor/templating';
-import {Availability} from '../../imports/api/availability.js'
+import {Template } from 'meteor/templating';
+import {Availability} from '/imports/api/availability.js'
 
 
-Template.appointments.onCreated( () => {
-  let template = Template.instance();
-  template.subscribe( 'availability' );
-  console.log(Availability.find().fetch());
+Template.appointments.onCreated(function() {
+  this.autorun(() => {
+    this.subscribe('availability');
+  });
 });
 
 Template.appointments.helpers({
-  /*appointments() {
-    let appointments = Availability.find();
-    if ( appointments ) {
+  appointments() {
+    let appointments = Availability.find({owner: Meteor.userId()}).fetch();
+    //if ( appointments ) {
       return appointments;
-    }
-  }*/
+    //}
+  }
 });
 

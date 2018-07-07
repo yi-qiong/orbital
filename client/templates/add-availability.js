@@ -1,7 +1,8 @@
 import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import './add-availability.html';
-import '../../imports/api/availability.js';
+import '/imports/api/availability.js';
+import {Availability} from '/imports/api/availability.js'
 
 $('#availability').checkbox();
 
@@ -21,9 +22,10 @@ Template.addAppointment.onRendered( () => {
   });
 }); 
 
-Template.addAppointment.onCreated( () => {
-  let template = Template.instance();
-  template.subscribe( 'availability' );
+Template.addAppointment.onCreated(function() {
+  this.autorun(() => {
+    this.subscribe('availability');
+  });
 });
 
 Template.addAppointment.events({
@@ -83,27 +85,21 @@ Template.addAppointment.events({
 
     //call insert method when user inputs all fields or indicate whole day not free
     if (selectedDate != "" && startTime != "" && endTime != "" || selectedDate != "" && $('#availability').checkbox('is checked')) {
-          //popup message to let players confirm if they want to block out date
-          var confirmBlockDate = confirm("Are you sure you want to block out the date?");
-            if (confirmBlockDate == true) { //player confirm want to block out date
-              Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
-                if ( error ) {
-                  Bert.alert( error.reason, 'danger' );
-                } else {
-                  Bert.alert( 'Date blocked out', 'success' );
-                }
-              });
-
+      //popup message to let players confirm if they want to block out date
+      var confirmBlockDate = confirm("Are you sure you want to block out the date?");
+      if (confirmBlockDate == true) { //player confirm want to block out date
+        Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
+          if ( error ) {
+            Bert.alert( error.reason, 'danger' );
+          } else {
+            Bert.alert( 'Date blocked out', 'success' );
+            console.log(Availability.find().fetch());
           }
+        });
+
       }
+    }
   }
 });
 
-Template.addAppointment.helpers({
-  help(){
-    
-      //Availability.findOne({owner: Meteor.userID(), date: selectedDate}).start();
-        
-    
-  }
-});
+

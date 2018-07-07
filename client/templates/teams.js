@@ -12,7 +12,7 @@ Tracker.autorun(function () {
     Meteor.subscribe("userInfo");
 });
 
-Template.teams.rendered = function() {
+Template.teams.rendered = function() { //behaviour after template is loaded
   // be sure to use this.$ so it is scoped to the template instead of to the window
   this.$('.ui.dropdown').dropdown({on: 'hover'});
   this.$('.ui.form')

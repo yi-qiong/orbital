@@ -24,6 +24,7 @@ Meteor.methods({
     check(startTime, String);
     check(endTime, String);
     
+
     Availability.insert({
       date: selectedDate,
       start: startTime,
@@ -31,6 +32,7 @@ Meteor.methods({
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });
+    console.log(Availability.find().fetch());
   }
 });
 //}
