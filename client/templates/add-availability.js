@@ -31,9 +31,9 @@ Template.addAppointment.events({
 'click #availability': function() { //toggle button events
   if ($('#availability').checkbox('is checked')) {
         event.preventDefault();
+        $('#start_time').data('DateTimePicker').date(null); //set to placeholder value
+        $('#end_time').data('DateTimePicker').date(null); //set to placeholder value
      //disable timepicker when button is toggled
-      $('#start_time').datetimepicker.value(''); //how to set the value? whats the syntax
-      $('#end_time').datetimepicker.value('');
       $('#start_time').datetimepicker('disable');
       $('#end_time').datetimepicker('disable');
     } else {
@@ -42,7 +42,6 @@ Template.addAppointment.events({
       $('#end_time').datetimepicker('enable');
     }
   },
-
 
 
   'submit #add-appointment': function(event) {
