@@ -17,4 +17,3 @@ Template.appointments.helpers({
     //}
   }
 });
-

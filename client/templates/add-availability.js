@@ -2,7 +2,6 @@ import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import './add-availability.html';
 import '/imports/api/availability.js';
-import {Availability} from '/imports/api/availability.js'
 
 $('#availability').checkbox();
 
@@ -93,7 +92,6 @@ Template.addAppointment.events({
             Bert.alert( error.reason, 'danger' );
           } else {
             Bert.alert( 'Date blocked out', 'success' );
-            console.log(Availability.find().fetch());
           }
         });
 
@@ -101,5 +99,3 @@ Template.addAppointment.events({
     }
   }
 });
-
-
