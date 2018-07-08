@@ -3,13 +3,31 @@
 
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-      <h4 class="page-header">Select date and time unavailable</h4>
+      <h4 class="page-header">Unavailable</h4>
       {{> addAppointment}}
     </div>
   </div>
 
+  <ul class="list-group appointments-list">
+        {{#each appointments}}
+        <li class="list-group-item" style="text-align: center">
+        {{this}} <!--list items-->
+        <div class="ui icon button" id="edit"> <!-- if show the edit content, need to use animate instead of icon -->
+      <!-- <div class="hidden content">Edit</div> --> <!-- why doesnt show -->
+      <!--<div class="visible content">-->
+        <i class="edit icon"></i>
+      <!--</div>-->
+    </div>
 
-  {{appointments}}
+    <div class="ui icon button" id="delete"> <!-- if show the edit content, need to use animate instead of icon -->
+      <!--<div class="hidden content">Delete</div>--> <!-- why doesnt show -->
+      <!--<div class="visible content">-->
+         <i class="trash icon"></i>
+      <!--</div>-->
+    </div> 
+    </li>
+  {{/each}}
+      </ul>
 
   {{> modal}}
 
