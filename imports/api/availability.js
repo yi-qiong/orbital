@@ -33,6 +33,9 @@ Meteor.methods({
       username: Meteor.user().username,
     });
     console.log(Availability.find().fetch());
+  },
+  'blockout.remove'(id){
+    Availability.remove(id);
   }
 });
 //}

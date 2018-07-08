@@ -6,7 +6,7 @@ import '/imports/api/availability.js';
 $('#availability').checkbox();
 
 Template.addAppointment.onRendered( () => {
-   $( '#datepicker' ).datetimepicker({
+  $( '#datepicker' ).datetimepicker({
     timeZone: 'SGT',
     minDate: new Date(), //disable past dates and only show date starting from the current date
     format: 'YYYY-MM-DD'
@@ -19,6 +19,20 @@ Template.addAppointment.onRendered( () => {
   $('#end_time').datetimepicker({
     format: 'hh:mm A',
   });
+
+  //this entire part doesnt work coz this onRendered is only called when the template is first rendered
+  //i nid to include this in a helper so it can run reactively
+  if (!Session.equals('selectedBlockOut',null)){//only executed if someone clicks #edit
+     date = Session.get('selectedBlockOut').date;
+    console.log("test");
+    $('#datepicker').data('DateTimePicker').date(date);
+    var start = Session.get('selectedBlockOut').start;
+    $('#start_time').data('DateTimePicker').date(start);
+    var end = Session.get('selectedBlockOut').end;
+    $('#end_time').data('DateTimePicker').date(end);
+  } 
+  
+
 }); 
 
 Template.addAppointment.onCreated(function() {
@@ -29,12 +43,12 @@ Template.addAppointment.onCreated(function() {
 
 Template.addAppointment.events({
 
-'click #availability': function() { //toggle button events
-  if ($('#availability').checkbox('is checked')) {
-        event.preventDefault();
-        $('#start_time').data('DateTimePicker').date(null); //set to placeholder value
-        $('#end_time').data('DateTimePicker').date(null); //set to placeholder value
-     //disable timepicker when button is toggled
+  'click #availability': function() { //toggle button events
+    if ($('#availability').checkbox('is checked')) {
+      event.preventDefault();
+      $('#start_time').data('DateTimePicker').date(null); //set to placeholder value
+      $('#end_time').data('DateTimePicker').date(null); //set to placeholder value
+      //disable timepicker when button is toggled
       $('#start_time').datetimepicker('disable');
       $('#end_time').datetimepicker('disable');
     } else {
@@ -47,7 +61,7 @@ Template.addAppointment.events({
 
   'submit #add-appointment': function(event) {
     
-       event.preventDefault();
+    event.preventDefault();
     //get value to be inserted into availability collection
     var selectedDate = event.target.datePicker.value;
     var startTime = event.target.startTime.value;

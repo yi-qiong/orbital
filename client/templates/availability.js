@@ -10,37 +10,30 @@ Template.appointments.onCreated(function() {
 });
 
 Template.appointments.events({
-	'click #edit': function() {
-		//need to present the info in the picker then allow user to change the info
-	},
+  'click #edit': function() {
+  //need to present the info in the picker then allow user to change the info
+    Session.set('selectedBlockOut',this); //pasing the entire appointment object
+    console.log(this);
+  },
 
-	'click #delete': function() {
-		//delete the data 
-	}
+  'click #delete': function() {
+  //delete the data
+    Meteor.call('blockout.remove',this._id);
+  }
 });
 
 Template.appointments.helpers({
   appointments() {
-    let appointments = Availability.find({owner: Meteor.userId()}).fetch();
-    var datesList = new Array();
-   		$.each(appointments,function(key, value) {
-    	if (value.start == "" && value.end =="") {
-    		var blockedDate = "on " + value.date;
-    		console.log(blockedDate)
-    		datesList.push(blockedDate);
-    	} else {
-    		var blockedDate = value.date;
-    		var startTime = value.start;
-    		var endTime = value.end;
-    		var blockOut = "on " + blockedDate + " from " + startTime	+ " to " + endTime;
-    		console.log(blockOut)
-    		datesList.push(blockOut); 
-    	}
-    	
-    })
-   		return datesList;
-   	//console.log(appointments);
-  }
+    return Availability.find({owner: Meteor.userId()}).fetch();
+	//console.log(appointments);
+  },
+  string(){
+  	if (this.start == "" && this.end =="") {
+      return "on " + this.date;
+    } else {
+      return "on " + this.date + " from " + this.start + " to " + this.end;
+    }
+  },
 });
 
 //in html: output as a list 
