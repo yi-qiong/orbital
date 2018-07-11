@@ -8,7 +8,8 @@ Meteor.publish('userInfo', function () {
       submittedTeamForm:1,
       hall:1,
       gender:1,
-      teams:1
+      teams:1,
+      submittedBlockOut:1
     }
   });
 }); 
