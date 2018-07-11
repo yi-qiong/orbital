@@ -13,13 +13,13 @@ Template.appointments.events({
   'click #edit': function() {
   //need to present the info in the picker then allow user to change the info
     Session.set('selectedBlockOut',this); //pasing the entire appointment object
-    console.log(this);
+    Session.set('oldEntry', this._id); //to allow this entry to be removed when user edit current entry
   },
 
   'click #delete': function() {
   //delete the data
     Meteor.call('blockout.remove',this._id);
-  }
+  },
 });
 
 Template.appointments.helpers({
@@ -35,8 +35,3 @@ Template.appointments.helpers({
     }
   },
 });
-
-//in html: output as a list 
-//when i click on an entry, i should be able to edit/delete the entry (use semantic animate button)
-//when click on edit button, the entry should reflect back in the datetimepicker
-//when click on the delete button, will just remove from the collection
