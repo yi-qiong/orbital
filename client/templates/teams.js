@@ -44,7 +44,7 @@ Template.teams.rendered = function() { //behaviour after template is loaded
       var hall = $form.form('get value', 'hall');
       var gender = $form.form('get value', 'gender');
       var teams = $form.form('get value', 'teams');
-      Meteor.call('submitTeamForm', {
+      Meteor.call('saveTeamForm', {
         hall: hall,
         gender: gender,
         teams: teams,
@@ -64,7 +64,7 @@ Template.teams.rendered = function() { //behaviour after template is loaded
 
 Template.teams.helpers({
   submitted: function() {
-    if (Meteor.user().submittedTeamForm){
+    if (Meteor.user().submitConfirmation){
       return "disabled";
     }// METEOR PUBLISH NEEDED AND SUBSCRIBE
   },
@@ -76,31 +76,26 @@ Template.teams.helpers({
     return Template.instance().isFemale.get();
   },
   hall(){
-    if (Meteor.user().submittedTeamForm){
+    if (Meteor.user().hall){
       return Meteor.user().hall;
     } else {
       return "Hall of Residence";
     }
   },
   gender(){
-    if (Meteor.user().submittedTeamForm){
+    if (Meteor.user().gender){
       return Meteor.user().gender;
     } else {
       return "Gender";
     }
   },
   teams(){
-    if (Meteor.user().submittedTeamForm){
+    if (Meteor.user().teams){
       return Meteor.user().teams;
     } else {
       return "Select Teams";
     }
   },
-  hidden(){
-    if (! Meteor.user().submittedTeamForm){
-      return "hidden";
-    }
-  }
 })
 
 

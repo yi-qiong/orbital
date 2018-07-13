@@ -1,16 +1,16 @@
 <template name="sidebar">
   {{#if currentUser}} <!--ensure logged in-->
 
-  <div class="ui overlay inverted visible left sidebar vertical menu">
+  <div class="ui overlay inverted visible left sidebar vertical labeled icon menu">
 
-    <div class="header item" style="padding-top:25px">
-      <header>
-        <h3> Name </h3>
-      </header>
-      <h4>
-        NusNet ID <br>
-        <br>
-      </h4>
+    <div class=" header item" style="padding-top:25px; text-align: left;padding-bottom: 25px">
+      <h3 class="ui inverted header">
+        <i class=" user circle icon"></i>
+        <div class="content">
+          Just testing some very long name
+          <div class="sub header">NusnetID</div>
+        </div>
+      </h3>
     </div>
 
     <a class="item active teams">
@@ -18,9 +18,14 @@
     </a>
 
     <a class="item availability">
-      <i class="calendar alternate outline icon"></i> Availability 
+      <i class=" calendar alternate outline icon"></i> Availability
     </a>
-      <br style="line-height:15">
+
+    <a class="item confirm">
+      <i class=" check square icon"></i> Confirmation
+    </a>
+
+      <br style="line-height:10">
     <div >
 
       {{> atNavButton}}
@@ -29,9 +34,9 @@
 
   </div>
 
-
+  
   <div class="pusher" style="margin-top: 20px; width: calc(100% - 210px); margin-left: 210px">
-    <div class = "ui container segment">
+    <div class = "ui container">
       {{> Template.dynamic template=tab}}
     </div>
   </div>

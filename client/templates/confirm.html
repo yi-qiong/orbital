@@ -1,0 +1,56 @@
+<template name="confirm">
+  {{#if currentUser}}
+
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+      <h4 class="page-header">Confirm your details before submitting!</h4>
+    
+      <div class="ui teal segment" style="padding-right:15px; padding-left: 15px">
+        <div class="ui very relaxed divided list">
+  		    <div class="bottom aligned item">    	
+  		      <i class = "{{genderIcon}} icon"> </i>
+    	      <div class="content">
+      		    <div class="header">Gender</div>
+      		    <div class="description"> {{gender}}</div>
+      	    </div>
+      	  </div>  
+
+      	  <div class="item">    	
+  		      <i class = "university icon">  </i>
+    	      <div class="content">
+      		    <div class="header">Hall</div>
+      		    <div class="description"> {{hall}} Hall</div>
+      	    </div>
+      	  </div>
+
+      	  <div class="item">    	
+  		      <i class = "users icon">  </i>
+    	      <div class="content">
+      		    <div class="header">Sports Teams</div>
+      		    <div class="description"> 
+                {{#each teams}} 
+                  {{this}} <br>
+                {{/each}}
+              </div>
+      	    </div>
+      	  </div>
+
+      	  <div class="item">    	
+  		      <i class = "calendar times icon">  </i>
+    	       <div class="content">
+      		     <div class="header">Blocked Out Dates</div>
+      		     <div class="description"> 
+      			     {{#each appointments}}
+      				     {{string}}<br>
+          		   {{/each}}
+      	  	   </div>
+      	     </div>
+      	   </div>
+        </div>
+      </div>
+
+  	{{> modal}}
+    </div>
+  </div>
+  {{/if}}
+</template>

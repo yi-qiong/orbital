@@ -2,7 +2,7 @@ import {Meteor} from 'meteor/meteor';
 import { Mongo} from 'meteor/mongo';
 
 Meteor.methods({
-  'submitBlockOut'({}) {
+  'submitConfirmation'({}) {
     // Make sure the user is logged in 
     if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
@@ -13,7 +13,7 @@ Meteor.methods({
     
     Meteor.users.update(Meteor.userId(), { //update field in user docs
       $set: {
-        submittedBlockOut: true,
+        submitConfirmation: true,
       }
     });
   },

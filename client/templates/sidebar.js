@@ -21,14 +21,19 @@ Template.sidebar.helpers({
 
 Template.sidebar.events({
   'click .teams': function(event, template) {
-    $('.availability').removeClass('active');
+    $('.item').removeClass('active');
     $('.teams').addClass('active');
     Template.currentTab.set("teams");
   },
   'click .availability': function(event, template) {
-    $('.teams').removeClass('active');
+    $('.item').removeClass('active');
     $('.availability').addClass('active');
     Template.currentTab.set("appointments");
+  },
+  'click .confirm': function(event, template) {
+    $('.item').removeClass('active');
+    $('.confirm').addClass('active');
+    Template.currentTab.set("confirm");
   },
   'click #at-nav-button': function(){
     Meteor.logout();
