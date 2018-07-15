@@ -20,9 +20,9 @@ Template.sidebar.helpers({
 
 
 Template.sidebar.events({
-  'click .teams': function(event, template) {
+  'click .sports': function(event, template) {
     $('.item').removeClass('active');
-    $('.teams').addClass('active');
+    $('.sports').addClass('active');
     Template.currentTab.set("teams");
   },
   'click .availability': function(event, template) {

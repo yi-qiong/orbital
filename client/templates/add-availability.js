@@ -14,12 +14,12 @@ Template.addAppointment.onRendered( () => {
 
   $('#start_time').datetimepicker({
     stepping: 15, //only allow time selection in intervals of 15 mins
-    format: 'HH:mm'
+    format: 'hh:mm A'
   });
 
   $('#end_time').datetimepicker({
     stepping: 15, //only allow time selection in intervals of 15 mins
-    format: 'HH:mm'
+    format: 'hh:mm A'
   });
 
   document.getElementById("confirm").style.display="none"; //hide confirm edit button when first rendered
@@ -115,33 +115,44 @@ Template.addAppointment.events({
       Bert.alert('Start and End Time not indicated!', 'danger')
     }
 
-    //call insert method when user inputs all fields or indicate whole day not free
+    
     if (selectedDate != "" && startTime != "" && endTime != "" || selectedDate != "" && $('#availability').checkbox('is checked')) {
-        
-        if (Session.get('selectedBlockOut') != null) { //user did click on edit button and they decide to confirm edit 
-          var id = Session.get('oldEntry'); 
-          console.log(id);
-          Meteor.call('blockout.remove',id); //remove the old entry & update with new one
-          document.getElementById("blockout").style.display="block";
-          document.getElementById("confirm").style.display="none";
-          document.getElementById("cancel").style.display="none";
-        }
+      if ($('#availability').checkbox('is checked')||startTime.indexOf("AM") !== -1 && endTime.indexOf("PM")!== -1){
+      //if whole day not free or startTime is AM and endTime isPM, confirm success?
+        success(); //call for success function
+      } else if ( startTime.indexOf("PM") !== -1 && endTime.indexOf("AM")!== -1){//if startTime is PM and endTime is AM
+        console.log("fail");
+        fail(); //call for fail function
+      } else if (startTime.substring(0,2) ==12 && endTime.substring(0,2)<12 ){
+      //if both AM/ both PM, and startTime hh ==12 and endTime hh <12
+        success();
+      } else if ( startTime<endTime){
+        success();
+      } else {
+        fail();
+      }
+    }
 
-        if (startTime >= endTime) { 
-          Bert.alert('Start Time need to be before End Time!', 'danger')
+    function success() {
+      if (Session.get('selectedBlockOut') != null) { //user did click on edit button and they decide to confirm edit 
+        var id = Session.get('oldEntry'); 
+        console.log(id);
+        Meteor.call('blockout.remove',id); //remove the old entry & update with new one
+        document.getElementById("blockout").style.display="block";
+        document.getElementById("confirm").style.display="none";
+        document.getElementById("cancel").style.display="none";
+      }
+      Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
+        if ( error ) {
+          Bert.alert( error.reason, 'danger' );
         } else {
-          if (!Session.equals('selectedBlockOut', null)) { 
-            Session.set('selectedBlockOut', null);
-          }    
-
-          Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
-            if ( error ) {
-              Bert.alert( error.reason, 'danger' );
-            } else {
-              Bert.alert( 'Date blocked out', 'success' );
-            }
-          });  
+          Bert.alert( 'Date blocked out', 'success' );
         }
+      });
+    }
+
+    function fail(){
+      Bert.alert('Start Time needs to be before End Time!', 'danger')
     }
   }
 });
