@@ -12,7 +12,10 @@ Template.confirm.onCreated(function() {
 
 Template.confirm.helpers({
   genderIcon() {
-    return Meteor.user().gender.toLowerCase();
+    if (Meteor.user().gender){
+      return Meteor.user().gender.toLowerCase();
+    }
+    return "venus mars";
   },
   gender() {
     return Meteor.user().gender;

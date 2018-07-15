@@ -1,9 +1,9 @@
 <template name="teams"> 
 
-
+  {{#if Template.subscriptionsReady}}
   <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-      <h4 class="page-header">Let us know which teams you are representing in IHG!</h4>
+      <h4 class="page-header">Let us know which teams you are representing in IHG! </h4>
    
   <form class="ui form">
 
@@ -12,14 +12,14 @@
         <div class="{{submitted}} field">
           <label>Hall of Residence</label>
           <select class="ui dropdown" name="hall" id="hall">
-            <option value="">{{hall}}</option>
-            <option value="Eusoff">Eusoff Hall</option>
-            <option value="Kent Ridge">Kent Ridge Hall</option>
-            <option value="King Edward VII">King Edward VII Hall</option>
-            <option value="Raffles">Raffles Hall</option>
-            <option value="Sheares">Sheares Hall</option>
-            <option value="Temasek">Temasek Hall</option>
-            <option value="PGP">PGP House</option>
+            <option value="">Hall of Residence</option>
+            <option value="Eusoff Hall">Eusoff Hall</option>
+            <option value="Kent Ridge Hall">Kent Ridge Hall</option>
+            <option value="King Edward VII Hall">King Edward VII Hall</option>
+            <option value="Raffles Hall">Raffles Hall</option>
+            <option value="Sheares Hall">Sheares Hall</option>
+            <option value="Temasek Hall">Temasek Hall</option>
+            <option value="PGP House">PGP House</option>
           </select>
         </div>
 
@@ -27,7 +27,7 @@
         <div class="{{submitted}} field">
           <label>Gender</label>
           <select class="ui dropdown" name="gender" id="gender">
-            <option value="">{{gender}}</option>
+            <option value="">Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
@@ -37,8 +37,8 @@
         <div id="teams">
         <div class="{{disabled}} {{submitted}} field">
           <label>Teams</label>
-          <select name="teams" multiple="" class="ui dropdown" id="teams">
-            <option value="">{{teams}}</option>
+          <select name="teams" multiple="" class="ui dropdown teams" id="teams">
+            <option value="">Select Teams</option>
             
             {{#if isFemale}} <!--reactive rendering based on gender field chosen-->
             <option value="Badminton(F)">Badminton(F)</option>
@@ -82,14 +82,24 @@
         </div>  
         </div>  
     <br>
-    <div class="ui right floated primary submit button">Save</div>
+    {{#if editMode}}
+      <div class="ui right floated primary submit button">Save</div>
+    {{else}}
+      <div class="ui right floated teal edit button" >
+        <i class="icon edit"></i>
+          Edit
+      </div>
+    {{/if}}
     <br>
     <br>
+    <!--
     <div class="ui success message">
         <div class="header">Form saved successfully.</div>
     </div>
+     -->
 
   </form>
   </div>
   </div>  
+  {{/if}}
 </template>
