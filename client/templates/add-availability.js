@@ -76,6 +76,10 @@ Template.addAppointment.events({
     }
   },
 
+  'click #start': function() {
+    document.getElementById("message").style.display="block"; //show message when click on time icon
+  },
+
 
   'submit #add-appointment': function(event) {//this works either when they block out or they confirm edit their schedule
     
@@ -89,32 +93,11 @@ Template.addAppointment.events({
     console.log(startTime);
     console.log(endTime);
 
-
-    //if all fields empty, present error. 
-    if (selectedDate == "" && startTime == "" && endTime == "") {
-      Bert.alert('Form is empty!', 'danger')
+    if (selectedDate =="" || startTime =="" || endTime =="") {
+      if ((!($('#availability').checkbox('is checked')) && (startTime =="" || endTime =="")) || selectedDate =="") {
+        Bert.alert('Please fill up all fields!', 'danger');
+      }
     }
-
-    //did not choose date
-    if (selectedDate == "") {
-      Bert.alert('Date not indicated!', 'danger')
-    }
-
-    //date and start time not indicated
-    if (selectedDate == "" && startTime == "") {
-      Bert.alert('Date and Start Time not indicated!', 'danger')
-    }
-
-    //date and start time not indicated
-    if (selectedDate == "" && endTime == "") {
-      Bert.alert('Date and End Time not indicated!', 'danger')
-    }
-
-    //did not indicate whole day not free and did not indicate start & end time
-    if (startTime == "" && endTime =="" && !($('#availability').checkbox('is checked'))) { 
-      Bert.alert('Start and End Time not indicated!', 'danger')
-    }
-
     
     if (selectedDate != "" && startTime != "" && endTime != "" || selectedDate != "" && $('#availability').checkbox('is checked')) {
       if ($('#availability').checkbox('is checked')||startTime.indexOf("AM") !== -1 && endTime.indexOf("PM")!== -1){
