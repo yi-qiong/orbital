@@ -1,0 +1,13 @@
+<template name="register">
+    <div class = "ui container">
+    
+    {{#if atDisabled}}
+     Please wait...
+    {{/if}}
+    
+
+     <div class="{{atClass}}">
+      {{> atForm state='enrollAccount'}}
+     </div>
+    </div>
+</template>
