@@ -16,6 +16,14 @@ Template.sidebar.helpers({
     console.log(Template.currentTab.get()); //getter method for current active tab
     return Template.currentTab.get();
   },
+
+  userName: function() {
+    return Meteor.user().username;
+  },
+
+  nusID: function() {
+    return Meteor.user().emails[0].address;
+  },
 });
 
 
