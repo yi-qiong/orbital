@@ -2,12 +2,13 @@ import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 
 Template.modal.onCreated(function() {
+  $('body .modals').remove();
   this.autorun(() => {
     this.subscribe('userInfo');
   });
 });
 
-Template.modal.rendered= function() {
+Template.modal.onRendered= function() {
   $('.ui.modal')
 	.modal({
 	  onApprove : function() {
@@ -20,24 +21,26 @@ Template.modal.rendered= function() {
 	    });
 	    if (Meteor.user().submitConfirmation ){ 
 	    //if previous meteor.call doesnt hv error
-	    	$('.ui.toggle.button').state("active");
+	    	$('.ui.button').state("disabled");
 	    }
-	  }
+	  },
+    onDeny : function(){
+      $('body .modals').remove();
+    }
 	});
 
-  $('.ui.toggle.button')
+  $('.ui.button')
     .state({
       text: {
-        inactive : 'Submit',
-        active   : 'Submitted'
+        disabled  : 'Submitted'
       }
-
     });
 };
 
 Template.modal.events({
   //once click on the submit button
-  'click .toggle': function(event, template) { 
+  'click .button': function(event, template) { 
+
   	if(!Meteor.user().submitConfirmation){ //ensure it is being submitted for first time
   	  $('.ui.basic.modal').modal('show'); //modal appears
       $('.ui.dimmer').dimmer('show');

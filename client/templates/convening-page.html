@@ -1,0 +1,43 @@
+<template name="conveningPage">
+  <!--{{#if currentUser}}--> <!--ensure logged in-->
+
+  <div class="ui overlay inverted visible left sidebar vertical labeled icon menu">
+
+    <div class=" header item" style="padding-top:25px; text-align: left;padding-bottom: 25px">
+      <h3 class="ui inverted header">
+        <i class=" user circle icon"></i>
+        <div class="content">
+          Just testing some very long name
+          <div class="sub header">Convening</div>
+        </div>
+      </h3>
+    </div>
+
+    <a class="item overview active">
+      <i class="calendar alternate icon "></i> Current Schedule Overview 
+    </a>
+
+    <a class="item edit">
+      <i class=" calendar plus icon"></i> Edit Schedule
+    </a>
+
+
+
+      <br style="line-height:15">
+    <div >
+
+      {{> atNavButton}}
+      
+    </div>
+
+  </div>
+
+  
+  <div class="pusher" style="margin-top: 20px; width: calc(100% - 210px); margin-left: 210px">
+    <div class = "ui container">
+      {{> Template.dynamic template=tab}}
+    </div>
+  </div>
+  <!--{{/if}}-->
+  
+</template>

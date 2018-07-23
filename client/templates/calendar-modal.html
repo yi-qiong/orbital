@@ -1,0 +1,91 @@
+<template name = "calendarModal">
+
+<div class ="ui button teal" id="addMatch"> Add a match</div>
+
+<div class="ui small modal">
+  <i class="close icon"></i>
+    <div class="content">
+	 <form class="ui form">
+  		<h4 class="ui dividing header">Add a match</h4>
+
+        <div class="two fields">
+        <div class="field">
+          <label>Match Sport</label>
+          <select name="sport" class="ui dropdown" id="sport">
+            <option value="">Select sport</option>
+			      <option value="Badminton(F)">Badminton(F)</option>
+            <option value="Badminton(M)">Badminton(M)</option>
+            <option value="Basketball(F)">Basketball(F)</option>
+            <option value="Basketball(M)">Basketball(M)</option>
+            <option value="Floorball(F)">Floorball(F)</option>
+            <option value="Floorball(M)">Floorball(M)</option>
+            <option value="Frisbee">Frisbee</option>
+            <option value="Handball(F)">Handball(F)</option>
+            <option value="Handball(M)">Handball(M)</option>
+            <option value="Netball">Netball</option>
+            <option value="Road Relay">Road Relay</option>
+            <option value="Sepak Takraw">Sepak Takraw</option>
+            <option value="Soccer(F)">Soccer(F)</option>
+            <option value="Soccer(M)">Soccer(M)</option>
+            <option value="Softball">Softball</option>
+            <option value="Squash(F)">Squash(F)</option>
+            <option value="Squash(M)">Squash(M)</option>        
+            <option value="Swimming(F)">Swimming(F)</option>
+            <option value="Swimming(M)">Swimming(M)</option>
+            <option value="Table Tennis(M)">Table Tennis(M)</option>
+            <option value="Table Tennis(F)">Table Tennis(F)</option>
+            <option value="Tennis(F)">Tennis(F)</option>
+            <option value="Tennis(M)">Tennis(M)</option>
+            <option value="Touch Rugby(F)">Touch Rugby(F)</option>
+            <option value="Touch Rugby(M)">Touch Rugby(M)</option>
+            <option value="Track and Field">Track and Field</option>
+            <option value="Volleyball(F)">Volleyball(F)</option>
+            <option value="Volleyball(M)">Volleyball(M)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Match Round</label>
+          <select name="round" class="ui dropdown" id="round">
+            <option value="">Select round</option>
+			      <option value="Preliminary">Preliminary</option>
+            <option value="Semi- finals">Semi- finals</option>
+            <option value="Finals">Finals</option>
+          </select>
+        </div>
+    	</div>
+
+        <div class="field">
+          <label>Halls Involved</label>
+          <select class="ui dropdown" name="halls" id="halls" multiple="">
+            <option value="">Select at least two halls</option>
+            <option value="Eusoff Hall">Eusoff Hall</option>
+            <option value="Kent Ridge Hall">Kent Ridge Hall</option>
+            <option value="King Edward VII Hall">King Edward VII Hall</option>
+            <option value="Raffles Hall">Raffles Hall</option>
+            <option value="Sheares Hall">Sheares Hall</option>
+            <option value="Temasek Hall">Temasek Hall</option>
+            <option value="PGP House">PGP House</option>
+          </select>
+        </div>
+
+    		<div class="ui checkbox">
+      			<input type="checkbox" tabindex="0" class="hidden">
+      			<label>Outdoors</label>
+    		</div>
+     </form> 
+   </div>
+
+  		<div class="actions" style="border-top:0px;">			
+        <div class="ui cancel button">Cancel</div> 
+        <div class="ui primary ok button">Submit</div>
+  			
+  		</div>
+  	
+</div>
+
+
+</template>
+
+
+            

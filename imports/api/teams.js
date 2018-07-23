@@ -19,5 +19,6 @@ Meteor.methods({
         teams: teams,
       }
     });
+    console.log(Meteor.user());
   },
 })
