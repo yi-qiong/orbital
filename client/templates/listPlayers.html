@@ -1,0 +1,21 @@
+<template name="listPlayers">
+
+   <div class="row">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+      <h3 class="page-header"> Register Players by keying in their NUS emails</h3>
+      {{> registerPlayer}}
+    </div>
+  </div>
+
+  <br>
+  
+  <div class="row">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+      <h4 class="page-header">Players added</h4>
+      {{> tabular table=TabularTables.RegisteredPlayers class="table table-striped table-bordered table-condensed"}}
+    </div>
+  </div>
+  
+</template>
+
+

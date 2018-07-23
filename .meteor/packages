@@ -31,5 +31,10 @@ themeteorchef:bert
 runisland:static-assets
 
 aldeed:tabular
+<<<<<<< HEAD
 fullcalendar:fullcalendar
 underscore
+=======
+email
+meteorhacks:ssr
+>>>>>>> 2225bce8bbe8ca89f5166ecc9a6c4ab233998e84

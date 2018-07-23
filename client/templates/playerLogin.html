@@ -1,6 +1,5 @@
 <template name="playerLogin">
 	<div class = "ui container">
-	<h1>Player Login</h1>
 	
  	{{#if atDisabled}}
  	 Please wait...
@@ -8,7 +7,7 @@
  	
 
 	 <div class="{{atClass}}">
-	  {{> atForm}}
+	  {{> atForm state='signIn'}}
 	 </div>
 	 {{loginStatus}}
 	</div>

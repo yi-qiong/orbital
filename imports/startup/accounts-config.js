@@ -1,13 +1,8 @@
 import { AccountsTemplates } from 'meteor/useraccounts:core';
 
-
-Accounts.config({ //accounts-password
-  restrictCreationByEmailDomain: 'u.nus.edu',
-});
-
 AccountsTemplates.configure({ //useraccounts
     // Behavior
-    confirmPassword: false,
+    confirmPassword: true,
     enablePasswordChange: true,
     forbidClientAccountCreation: false,
     //enforceEmailVerification: true,
@@ -21,6 +16,7 @@ AccountsTemplates.configure({ //useraccounts
     showLabels: true,
     showPlaceholders: true,
     showResendVerificationEmailLink: false,
+    hideSignUpLink: true,
 
     // Client-side Validation
     continuousValidation: false,
@@ -52,6 +48,19 @@ AccountsTemplates.configure({ //useraccounts
     },
 });
 
+var password = AccountsTemplates.removeField('password');
+
+AccountsTemplates.addField({
+    _id: 'password',
+    type: 'password',
+    placeholder: {
+        enrollAccount: "At least six characters"
+    },
+    required: true,
+    minLength: 6,
+    re: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/,
+    errStr: 'At least 1 digit, 1 lowercase and 1 uppercase',
+});
 //var mySubmitFunc = function(error, state){
   //if (!error) {
     //if (state === "signIn") {
