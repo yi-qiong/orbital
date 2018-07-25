@@ -18,6 +18,7 @@ Template.calendarModal.rendered= function() {
        	 event.preventDefault();
        },
        onSuccess: function(event, fields){
+          event.preventDefault();
          $('.ui.modal').modal('hide'); //only hide when all fields are valid
          Bert.alert( 'Match added successfully', 'success' );
          var $form = $('.ui.form');
@@ -38,7 +39,13 @@ Template.calendarModal.rendered= function() {
     });
 };
 
-
+Template.calendarModal.events({
+'click #close' : function(event, template){
+    console.log("close");
+    $('.ui.form').form('clear'); //clear form before closing modal
+    $('.ui.modal').modal('hide');
+}
+})
 
 
 

@@ -1,5 +1,8 @@
 <template name = "calendarModal">
-      <form class="ui form">
+  
+    <form class="ui form">
+    <i class="close link icon" id="close"></i>
+
     	<h4 class="ui dividing header">Add a match</h4>
 
         <div class="two fields">
@@ -7,7 +10,7 @@
           <label>Match Sport</label>
           <select name="sport" class="ui search dropdown" id="sport">
             <option value="">Select sport</option>
-	    <option value="Badminton(F)">Badminton(F)</option>
+	          <option value="Badminton(F)">Badminton(F)</option>
             <option value="Badminton(M)">Badminton(M)</option>
             <option value="Basketball(F)">Basketball(F)</option>
             <option value="Basketball(M)">Basketball(M)</option>
@@ -42,7 +45,7 @@
           <label>Match Round</label>
           <select name="round" class="ui dropdown" id="round">
             <option value="">Select round</option>
-	    <option value="Preliminary">Preliminary</option>
+	           <option value="Preliminary">Preliminary</option>
             <option value="Semi- finals">Semi- finals</option>
             <option value="Finals">Finals</option>
           </select>
@@ -56,7 +59,7 @@
             <option value="Eusoff Hall">Eusoff Hall</option>
             <option value="Kent Ridge Hall">Kent Ridge Hall</option>
             <option value="King Edward VII Hall">King Edward VII Hall</option>
-	    <option value="PGP House">PGP House</option>
+	           <option value="PGP House">PGP House</option>
             <option value="Raffles Hall">Raffles Hall</option>
             <option value="Sheares Hall">Sheares Hall</option>
             <option value="Temasek Hall">Temasek Hall</option>
@@ -67,12 +70,12 @@
       	  <input type="checkbox" tabindex="0" class="hidden">
       	  <label>Outdoors</label>
     	</div>
-     	<br>
+     	  <br>
       	<br>
   	<div class="ui right floated primary submit button" id = "submitButton">Submit</div>
-        <div class="ui right floated clear button" style="margin-bottom: 10%">Clear</div>      
-  			
+        <div class="ui right floated clear button" style="margin-bottom: 5%">Clear</div>      
       </form>	
+
 </template>
 
 

@@ -1,11 +1,13 @@
 <template name = "calendarButton">
 
-<div class ="ui button teal" tabindex="0" id="addMatch"> 
+<div class ="ui button teal" id="addMatch"> 
   <i class="plus icon"></i>Add a match
 </div>
 
-<div class="ui small modal">
-  <i class=" close icon" id="close"></i>
+<div class="ui modal">
+  
+  <div class = "content">
   {{> calendarModal}}
+</div>
 </div>
 </template>
