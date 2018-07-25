@@ -5,5 +5,5 @@ import {Matches} from '/imports/api/matches.js';
 
 
 Meteor.publish( 'matches', function() {
-  return Matches.find();
+  return Matches.find({});
 });
