@@ -13,7 +13,7 @@ Template.calendarButton.rendered= function() {
       //probably wont execute since nvr include <actions>
     }
   });
-});
+};
 
 Template.calendarButton.events({
   //once click on the addMatch button
