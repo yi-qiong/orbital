@@ -41,16 +41,15 @@ Template.edit.onRendered(() => {
           rendering: 'background',
           editable: false,
           color: '#d5e1df'
-        },
-      ],
+        }
+      ]
     },
-    //{ //matches
-      //events: function( start, end, timezone, callback ) { 
-        //callback(Matches.find({start: {$qt:start}}).fetch());
-      //}
-    //}
-    
-
+    { //matches
+      events: function( start, end, timezone, callback ) { 
+        callback(Matches.find({start: {$gte:start},end: {$lte:end}, } ).fetch());
+      },
+      color: '#59a27a'
+    }
   ],
   
   
