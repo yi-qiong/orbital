@@ -1,8 +1,9 @@
 import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
-//import { fullCalendar} from 'fullcalendar';
-//import { moment } from 'moment';
 import './calendar-edit.html';
+import '/imports/api/matches.js';
+import {Matches} from '/imports/api/matches.js';
+
 
 Template.edit.onCreated(function() {
   this.autorun(() => {
