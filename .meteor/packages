@@ -31,6 +31,6 @@ themeteorchef:bert
 runisland:static-assets
 
 aldeed:tabular
-fullcalendar:fullcalendar
 email
 meteorhacks:ssr
+fullcalendar:fullcalendar
