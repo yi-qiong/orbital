@@ -1,19 +1,21 @@
 <template name = "calendarModal">
 
-<div class ="ui button teal" id="addMatch"> Add a match</div>
+<div class ="ui button teal" tabindex="0" id="addMatch"> 
+  <i class="plus icon"></i>Add a match
+</div>
 
 <div class="ui small modal">
-  <i class="close icon"></i>
+  <i class=" close icon" id="close"></i>
     <div class="content">
-	 <form class="ui form">
-  		<h4 class="ui dividing header">Add a match</h4>
+      <form class="ui form">
+    	<h4 class="ui dividing header">Add a match</h4>
 
         <div class="two fields">
         <div class="field">
           <label>Match Sport</label>
-          <select name="sport" class="ui dropdown" id="sport">
+          <select name="sport" class="ui search dropdown" id="sport">
             <option value="">Select sport</option>
-			      <option value="Badminton(F)">Badminton(F)</option>
+	    <option value="Badminton(F)">Badminton(F)</option>
             <option value="Badminton(M)">Badminton(M)</option>
             <option value="Basketball(F)">Basketball(F)</option>
             <option value="Basketball(M)">Basketball(M)</option>
@@ -48,7 +50,7 @@
           <label>Match Round</label>
           <select name="round" class="ui dropdown" id="round">
             <option value="">Select round</option>
-			      <option value="Preliminary">Preliminary</option>
+	    <option value="Preliminary">Preliminary</option>
             <option value="Semi- finals">Semi- finals</option>
             <option value="Finals">Finals</option>
           </select>
@@ -57,34 +59,30 @@
 
         <div class="field">
           <label>Halls Involved</label>
-          <select class="ui dropdown" name="halls" id="halls" multiple="">
+          <select class="ui search dropdown" name="halls" id="halls" multiple="">
             <option value="">Select at least two halls</option>
             <option value="Eusoff Hall">Eusoff Hall</option>
             <option value="Kent Ridge Hall">Kent Ridge Hall</option>
             <option value="King Edward VII Hall">King Edward VII Hall</option>
+	    <option value="PGP House">PGP House</option>
             <option value="Raffles Hall">Raffles Hall</option>
             <option value="Sheares Hall">Sheares Hall</option>
             <option value="Temasek Hall">Temasek Hall</option>
-            <option value="PGP House">PGP House</option>
           </select>
         </div>
 
-    		<div class="ui checkbox">
-      			<input type="checkbox" tabindex="0" class="hidden">
-      			<label>Outdoors</label>
-    		</div>
-     </form> 
-   </div>
-
-  		<div class="actions" style="border-top:0px;">			
-        <div class="ui cancel button">Cancel</div> 
-        <div class="ui primary ok button">Submit</div>
+    	<div class="ui checkbox">
+      	  <input type="checkbox" tabindex="0" class="hidden">
+      	  <label>Outdoors</label>
+    	</div>
+     	<br>
+      	<br>
+  	<div class="ui right floated primary submit button" id = "submitButton">Submit</div>
+        <div class="ui right floated clear button" style="margin-bottom: 10%">Clear</div>      
   			
-  		</div>
-  	
-</div>
-
-
+      </form>
+    </div>	
+  </div>
 </template>
 
 
