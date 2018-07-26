@@ -7,6 +7,20 @@ Template.calendarModal.rendered= function() {
   this.$('.ui.dropdown').dropdown();
   this.$('.ui.checkbox').checkbox();
   
+  if (Session.equals ('editMode', true)){
+    console.log("write values");
+    var eventId =Session.get('currentEditEvent');
+    var event = $("#calendar").fullCalendar( 'clientEvents', eventId );
+    this.$('.ui.form')
+    // set as saved values once template is rendered
+      .form('set values', {
+        sport     : event.sport,
+        round   : event.round,
+        halls    : event.halls,
+      })
+    ;
+  }
+
   this.$('.ui.form') //validate
     .form({
        fields: {

@@ -11,20 +11,33 @@ Meteor.methods({
     /*if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
     }*/
-    var time = $.fullCalendar.moment('2018-07-29T12:30:00');//moment(); 
-    console.log(time);
-    while (isBlockOut(time)){ //startTime is whithin the duration of a BlockOut object
-      time = nextStartTime(); //find next time available after blockout
-    }  
+    var time = '2018-07-27T12:30:00';   
+
     Matches.insert({
-      title: sport + " (" + round +")" , //eg: Tennis (Finals)
+      title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
+      description: description(),
       sport: sport,
       round: round,
       halls: halls,
-      start: time, //moment object 
+      start: time, 
       //duration is by default 2 hours when {end} is not specified in an event object
-    })
+    }); 
     console.log(Matches.find({}).fetch());
+
+    function description(){
+      if (halls.length==7){
+        return 'All halls';
+      } else if (halls.length==2){
+        return halls[0] + " vs " + halls[1];
+      } else{
+        var str = halls[0];
+        for (var i = 0; i < halls.length; i++){
+          str += ", " + halls[i];
+        }
+        return str;
+      }
+    }
+
     function isBlockOut(time){
 
     }

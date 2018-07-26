@@ -33,4 +33,5 @@ runisland:static-assets
 aldeed:tabular
 email
 meteorhacks:ssr
-fullcalendar:fullcalendar
+lookback:tooltips
+rzymek:fullcalendar
