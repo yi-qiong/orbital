@@ -108,7 +108,7 @@ Template.edit.rendered = function() {
   }).data().fullCalendar;
     
   Tracker.autorun(function(){
-    allReqsCursor = Calendar.find().fetch();
+    allReqsCursor = Matches.find().fetch();
     if(calendar){
       calendar.refetchEvents();
     }
