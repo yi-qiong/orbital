@@ -15,15 +15,9 @@ Template.edit.onCreated(function() {
 });
 
 
-Template.edit.rendered= function () {
-    this.autorun(function () {
-        $('#calendar').fullCalendar('refetchEvents');
-    });
-};
 
-Template.edit.helpers({
-  options: function() {
-  return {
+Template.edit.rendered = function() {
+  var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
     defaultView: 'agendaWeek',
@@ -88,46 +82,38 @@ Template.edit.helpers({
       console.log(Session.get ('editMode'));
       $('#calendar').fullCalendar('addEventSource' ,{
         events: [
-    {
-      title: 'Event1',
-      start: '2018-07-27'
-    },
-    {
-      title: 'Event2',
-      start: '2011-07-27'
-    }
-    // etc...
-  ],
-  color: 'yellow',   // an option!
-  textColor: 'black' // an option!
-})
+          {
+            title: 'Event1',
+            start: '2018-07-27'
+          }
+          
+        ],
+        color: 'yellow',   // an option!
+        textColor: 'black' // an option!
+      })
 
     },
     eventDragStart: function( event, jsEvent, ui, view ) {
         console.log('eventDrag');
         $('#calendar').fullCalendar('addEventSource' ,{
         events: [
-    {
-      title: 'Event1',
-      start: '2018-07-27'
-    },
-    {
-      title: 'Event2',
-      start: '2011-07-27'
+        {
+          title: 'Event1',
+          start: '2018-07-27'
+        }
+      ],
+      color: 'yellow',   // an option!
+      textColor: 'black' // an option!
+    })
+  }).data().fullCalendar;
+    
+  Tracker.autorun(function(){
+    allReqsCursor = Calendar.find().fetch();
+    if(calendar){
+      calendar.refetchEvents();
     }
-    // etc...
-  ],
-  color: 'yellow',   // an option!
-  textColor: 'black' // an option!
-})
-
-
-
-     }
-  }
-    }
-});
-  
+  });
+}; 
 
 
 
@@ -151,6 +137,7 @@ Template.edit.events({
     console.log("e.target");
     Session.set ('editMode', true);
     console.log(Session.get ('editMode'));
+    template.$('#cal').fullCalendar('refetchEvents');
   }
 })
 
