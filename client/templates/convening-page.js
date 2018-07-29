@@ -8,7 +8,7 @@ Router.route('/scheduling', {
 
 
 Template.conveningPage.onCreated(function() {
-  Template.currentTab = new ReactiveVar("overview"); //new attribute created and ref
+  Template.currentTab = new ReactiveVar("listPlayers"); //new attribute created and ref
 });
 
 Template.conveningPage.helpers({
@@ -16,10 +16,19 @@ Template.conveningPage.helpers({
     //console.log(Template.currentTab.get()); //getter method for current active tab
     return Template.currentTab.get();
   },
+   userName: function() {
+    return Meteor.user().username;
+  },
 });
 
 
 Template.conveningPage.events({
+  'click .register': function(event, template) {
+    $('.item').removeClass('active');
+    $('.register').addClass('active');
+    Template.currentTab.set("listPlayers");
+  },
+
   'click .overview': function(event, template) {
     $('.item').removeClass('active');
     $('.overview').addClass('active');
