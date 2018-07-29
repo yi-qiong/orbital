@@ -2,53 +2,57 @@ import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import './register.html';
 import {RegisteredPlayers} from '/imports/api/registeredPlayers.js';
+import {RegisteredConvening} from '/imports/api/registeredConvening.js';
 
 Router.route('/player-register', {
     template: 'register'
 });
 
 Meteor.subscribe('registeredPlayers');
+Meteor.subscribe('registeredConvening');
 
 Template.register.events({
-    'click #register-button': function(e, t) {
+    'submit #contact-form': function(e, t) {
         e.preventDefault();
         // Retrieve the input field values
-        var playerEmail = $('#email').val() + "@u.nus.edu", 
-            fullName = $('#name').val(),
+        var playerEmail = $('#email').val(), 
             password = $('#password').val(),
             passwordAgain = $('#password-again').val();
 
-        // Check password is at least 6 chars long
-        var isValidPassword = function(password, passwordAgain) {
-            if (password === passwordAgain) {
-                return password.length >= 6 ? true : false;
-            } else {
-                Bert.alert('Passwords do not match, Please Try again!', 'danger');
-            }
-        }
-
         
-        if (isValidPassword) { 
             var isRegistered = RegisteredPlayers.findOne({email: playerEmail});
+            console.log(isRegistered);
             if (isRegistered == undefined) {
                 Bert.alert('Registration denied: You are not registered as an IHG Player', 'danger')
             } else {
-                Meteor.call('registerPlayer', playerEmail, fullName, password, function(error) {
+                var fullName = isRegistered.name;
+                console.log(fullName);
+                var isConvening = RegisteredConvening.findOne({email: playerEmail});;
+                console.log(isConvening);
+                if (isConvening != undefined) { //player also convening so cannot create another user account
+                  Meteor.loginWithPassword(playerEmail, password, function(error) {
+                    if(error){
+                                console.log(error.reason);
+                            } else {
+                                Router.go("/playerPage");
+                            }
+                        });
+                } else {
+                    Meteor.call('registerPlayer', playerEmail, fullName, password, function(error) {
                     if (error) {
                         Bert.alert(error.reason, 'danger');
                     } else {
-                        Bert.alert('You are registered!', 'success')
                         Meteor.loginWithPassword(playerEmail, password, function(error){
                             if(error){
                                 console.log(error.reason);
                             } else {
                                 Router.go("/playerPage");
-                                console.log(Meteor.user());
                             }
                         });
                     }
                 })
+                } 
+                
             }
         }
-    }
 });
