@@ -1,7 +1,6 @@
  import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 
-SSR.compileTemplate('htmlEmail', Assets.getText('html-email.html'));
 
 Meteor.methods({
  sendEmail(recipient) {
@@ -9,14 +8,14 @@ Meteor.methods({
     // waiting for the email sending to complete.
     this.unblock();
     Email.send({
-    	to: recipient, 
+    	to: 'ihgscheduling@gmail.com', 
        from: 'admin@IHGscheduling.com',
-       subject: 'IHG Scheduling: Copy text in browser to proceed to register as IHG Player',
-       html: SSR.render('htmlEmail')
-    });
-  }
-});
+       subject: 'IHG Scheduling: send player register link',
+       text: "send email to " + recipient
+    }); 
+  } 
+}); 
 
 Meteor.startup(function () {
-  process.env.MAIL_URL = "smtp://postmaster%40sandbox66fb2ccc222b46a3af8f57cefd2a4748.mailgun.org:b03c92c716d14cf3077b62bb948b60c7-8889127d-a0e401e2@smtp.mailgun.org:587";
+  process.env.MAIL_URL = "smtp://postmaster%40sandbox61b61c2e7b75405a8e977eb43e21d7c2.mailgun.org:b0ecb604d0ca4beffa7a146e0188cca4-8889127d-1716d116@smtp.mailgun.org:587";
 });
