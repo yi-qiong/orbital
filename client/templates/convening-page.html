@@ -1,5 +1,5 @@
 <template name="conveningPage">
-  <!--{{#if currentUser}}--> <!--ensure logged in-->
+  {{#if currentUser}}
 
   <div class="ui overlay inverted visible left sidebar vertical labeled icon menu">
 
@@ -7,13 +7,17 @@
       <h3 class="ui inverted header">
         <i class=" user circle icon"></i>
         <div class="content">
-          Just testing some very long name
+          {{userName}}
           <div class="sub header">Convening</div>
         </div>
       </h3>
     </div>
 
-    <a class="item overview active">
+    <a class="item register active">
+      <i class="user plus icon "></i> Register Players
+    </a>
+
+    <a class="item overview">
       <i class="calendar alternate icon "></i> Current Schedule Overview 
     </a>
 
@@ -38,6 +42,6 @@
       {{> Template.dynamic template=tab}}
     </div>
   </div>
-  <!--{{/if}}-->
+  {{/if}}
   
 </template>
