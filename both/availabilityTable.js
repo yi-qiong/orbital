@@ -8,7 +8,10 @@ new Tabular.Table({
   name: "Availability",
   searching: false, //hide the search box
   collection: Availability,
-  order: [[0, 'asc'], [1, 'asc']], //sort the date by ascending
+  selector(userId) {
+    return { owner: userId };
+  },
+  orderFixed: [[0, 'asc'], [1, 'asc']], //sort the date by ascending
   columns: [
     {data: "date", title: "Blocked Out Date"},
     {data: "start", title: "Start Time"},
