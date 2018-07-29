@@ -12,23 +12,18 @@ Template.registerPlayer.onCreated(function() {
 
 Template.registerPlayer.events({
 
-  'submit #players': function(event) {
+  'submit #contact-form': function(event) {
     event.preventDefault();
-    var playerEmail = event.target.email.value + "@u.nus.edu";
-    var playerName = event.target.fullName.value;
+    var playerEmail = event.target.email.value;
+    var playerName = event.target.name.value;
 
-    if (playerEmail == "" || playerName=="") {
-      Bert.alert('Please fill up all fields!', 'danger')
-    } else {
-        Meteor.call('insertPlayer', playerEmail, playerName, (error, response) => {
+        Meteor.call('insertPlayer', playerEmail, playerName, (error, response) => { //store into register player collection to be retrieved upon register player
           if (error) {
             Bert.alert( error.reason, 'danger' );
           } else {
             Bert.alert('Player registered!', 'success');
-            Meteor.call('registerPlayer', playerEmail, playerName);
             Meteor.call('sendEmail', playerEmail);
           }
         })
-      }
     }
 });
