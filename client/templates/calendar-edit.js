@@ -105,7 +105,7 @@ Template.edit.rendered = function() {
       color: 'yellow',   // an option!
       textColor: 'black' // an option!
     })
-  }).data().fullCalendar;
+  }}).data().fullCalendar;
     
   Tracker.autorun(function(){
     allReqsCursor = Matches.find().fetch();
