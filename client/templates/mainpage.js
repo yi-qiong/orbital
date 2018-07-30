@@ -7,5 +7,9 @@ Router.route('/', {
 Template.mainpage.events({
 	'click .playerUse': function() {
 		Router.go('/playerLogin')
+	},
+
+	'click .conveningUse': function() {
+		Router.go('/conveningLogin')
 	}
 })
