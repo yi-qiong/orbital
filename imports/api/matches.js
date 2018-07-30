@@ -11,7 +11,7 @@ Meteor.methods({
     /*if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
     }*/
-    var time = '2018-07-27T12:30:00';   
+    var time = '2018-08-01T12:30:00';   
 
     Matches.insert({
       title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
