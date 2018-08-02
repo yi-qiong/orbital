@@ -1,7 +1,17 @@
 <template name = "calendarButton">
 
-{{#if editMode}} 
-{{>editMode}}
+{{#if isEditMode}} 
+<div class = "icon buttons">
+  <button class="ui icon button" id="edit">
+      <i class="edit icon"></i>
+  </button>
+  <button class="ui icon button" id="delete">
+      <i class="trash alternate icon"></i>
+  </button>
+  <button class="ui icon button" id="view">
+      <i class="eye icon"></i>
+  </button>
+</div>
 
 {{else}}
 <div class ="ui button teal" id="addMatch"> 
@@ -17,16 +27,3 @@
 </div>
 </template>
 
-<template name = "editMode">
-  <div class = "icon buttons">
-	<button class="ui icon button" id="edit">
-  		<i class="edit icon"></i>
-	</button>
-	<button class="ui icon button" id="delete">
-  		<i class="trash alternate icon"></i>
-	</button>
-	<button class="ui icon button" id="view">
-  		<i class="eye icon"></i>
-	</button>
-  </div>
-</template>

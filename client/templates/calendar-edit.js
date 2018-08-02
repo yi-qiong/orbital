@@ -7,16 +7,17 @@ import {Availability} from '/imports/api/availability.js';
 import moment from 'moment';
 
 
-Template.edit.onCreated(function() {
+Template.editCalendar.onCreated(function() {
   this.autorun(() => {
     this.subscribe('matches');
     this.subscribe('availability');
   });
+  Session.set ('isEditMode', false);
 });
 
 
 
-Template.edit.rendered = function() {
+Template.editCalendar.rendered = function() {
   var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
@@ -68,44 +69,45 @@ Template.edit.rendered = function() {
         $(element).attr('data-inverted', ""); 
       }
     },
-    eventMouseover: function( event, jsEvent, view ) {
+    /*eventMouseover: function( event, jsEvent, view ) {
       console.log(event);
-      if(!Session.equals ('editMode', true)){
+      if(!Session.equals ('isEditMode', true)){
         Session.set('currentEditEvent',event._id);
         console.log("mouseover");
       }
-    },
+    },*/
  
     eventClick: function(calEvent, jsEvent, view) {
       console.log('clicked');
-      Session.set ('editMode', true);
-      console.log(Session.get ('editMode'));
-      $('#calendar').fullCalendar('addEventSource' ,{
-        events: [
-          {
-            title: 'Event1',
-            start: '2018-07-27'
-          }
-          
-        ],
-        color: 'yellow',   // an option!
-        textColor: 'black' // an option!
-      })
+      if(!Session.equals ('isEditMode', true)){ //open Edit Mode
+        Session.set ('isEditMode', true);
+        Session.set('currentEditEvent', {
+          sport : calEvent.sport,
+          round : calEvent.round,
+          halls : calEvent.halls 
+        }); //for modal
+        
+        //showAvailableSlots(calEvent);
 
-    },
-    eventDragStart: function( event, jsEvent, ui, view ) {
-        console.log('eventDrag');
         $('#calendar').fullCalendar('addEventSource' ,{
-        events: [
-        {
-          title: 'Event1',
-          start: '2018-07-27'
-        }
-      ],
-      color: 'yellow',   // an option!
-      textColor: 'black' // an option!
-    })
-  }}).data().fullCalendar;
+          id: 'available slots' ,
+          events: [
+            {
+              title: 'Event1',
+              start: '2018-07-27'
+            }           
+          ],
+          color: 'yellow',   // an option!
+          textColor: 'black' // an option!
+        });
+      } else { //close Edit Mode
+        Session.set ('isEditMode', false);
+        Session.set('currentEditEvent',null);
+        $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+      }
+      console.log(Session.get ('isEditMode'));
+    }
+  }).data().fullCalendar;
     
   Tracker.autorun(function(){
     allReqsCursor = Matches.find().fetch();
@@ -120,7 +122,7 @@ Template.edit.rendered = function() {
 
 
 
-Template.edit.events({
+Template.editCalendar.events({
   'mousedown .fc-event'(e, t) {
     console.log("mousedown");
     var eventId =  Session.get('currentEditEvent');

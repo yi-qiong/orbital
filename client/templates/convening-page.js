@@ -37,7 +37,7 @@ Template.conveningPage.events({
   'click .edit': function(event, template) {
     $('.item').removeClass('active');
     $('.edit').addClass('active');
-    Template.currentTab.set("edit");
+    Template.currentTab.set("editCalendar");
   },
   'click #at-nav-button': function(){
     Meteor.logout();

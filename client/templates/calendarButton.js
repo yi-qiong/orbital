@@ -43,8 +43,8 @@ Template.calendarButton.events({
 });
 
 Template.calendarButton.helpers({
-  editMode(){
-    return Session.get ('editMode');
+  isEditMode(){
+    return Session.get ('isEditMode');
   }
 });
 
