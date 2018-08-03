@@ -11,15 +11,23 @@ Meteor.methods({
     /*if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
     }*/
-    var time = '2018-08-01T12:30:00';   
-
+    var time = moment();   
+    var users = [];//empty array
+    var cursor = Meteor.users.find({
+      hall: {$in:halls}, //check if user's hall is in the array 
+      teams: sport //searches for all users whose teams array include the given sport
+    });
+    cursor.forEach(function(user) {
+      users.push(user._id);
+    }); //add each of the users' ID into [users] array
     Matches.insert({
       title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
       description: description(),
       sport: sport,
       round: round,
       halls: halls,
-      start: time, 
+      start: time,
+      users: users
       //duration is by default 2 hours when {end} is not specified in an event object
     }); 
     console.log(Matches.find({}).fetch());
