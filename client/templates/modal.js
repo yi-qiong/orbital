@@ -1,5 +1,7 @@
 import {Meteor} from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import '/imports/api/modal.js';
+import './modal.html';
 
 Template.modal.onCreated(function() {
   $('body .modals').remove();
