@@ -151,20 +151,11 @@ function showAvailableSlots(event){
         id: 'available slots' ,   
         events: function(start, end, timezone, callback) {
           console.log(event);
-          var users = [];//empty array
-          var cursor = Meteor.users.find({
-            //event.halls is an array of halls involved in this match
-            hall: {$in:event.halls}, //check if user's hall is in the array 
-            teams: event.sport //searches for all users whose teams array include the given sport
-          });
-          cursor.forEach(function(user) {
-            users.push(user._id);
-          }); //add each of the users' ID into [users] array
           callback(Availability.find
             ({
               start: {$gte: start},
               end : {$lte:end},
-              owner : {$in: users}
+              owner : {$in: event.users}
             })
           .fetch()); //finally get the blockouts
         },
