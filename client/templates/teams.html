@@ -83,9 +83,9 @@
         </div>  
     <br>
     {{#if editMode}}
-      <div class="ui right floated primary submit button">Save</div>
+      <div class="ui right floated {{submitted}} primary submit button">Save</div>
     {{else}}
-      <div class="ui right floated teal edit button" >
+      <div class="ui right floated {{submitted}} teal edit button" >
         <i class="icon edit"></i>
           Edit
       </div>

@@ -10,43 +10,41 @@ Template.modal.onCreated(function() {
   });
 });
 
-Template.modal.onRendered= function() {
-  $('.ui.modal')
-	.modal({
-	  onApprove : function() {
-	    Meteor.call('submitConfirmation', {}, function (error) {
-	      //console.log("meteor.call working");
-	      if (error && error.error === "logged-out") {
-	        // show a nice error message
-	        Session.set("errorMessage", "Please log in before submitting your details.");
-	      } 
-	    });
-	    if (Meteor.user().submitConfirmation ){ 
-	    //if previous meteor.call doesnt hv error
-	    	$('.ui.button').state("disabled");
-	    }
-	  },
-    onDeny : function(){
-      $('body .modals').remove();
-    }
-	});
-
-  $('.ui.button')
-    .state({
-      text: {
-        disabled  : 'Submitted'
-      }
-    });
-};
 
 Template.modal.events({
   //once click on the submit button
   'click .button': function(event, template) { 
-
-  	if(!Meteor.user().submitConfirmation){ //ensure it is being submitted for first time
-  	  $('.ui.basic.modal').modal('show'); //modal appears
-      $('.ui.dimmer').dimmer('show');
-  	}
-   }
+  	$('.ui.basic.modal').modal({
+      onApprove : function() {
+        console.log("onApprove");
+        Meteor.call('submitConfirmation', {}, function (error) {
+          console.log("meteor.call working");
+          if (error && error.error === "logged-out") {
+          // show a nice error message
+          Session.set("errorMessage", "Please log in before submitting your details.");
+          } 
+        });
+      },
+      onDeny : function(){
+        $('body .modals').remove();
+      }
+    })
+    .modal('show');//modal appears
+    $('.ui.dimmer').dimmer('show');
+  }
 });
 
+Template.modal.helpers({
+  buttonText(){
+    if (Meteor.user().submitConfirmation ){
+      return "Submitted";
+    } else{
+      return "Submit";
+    }
+  },
+  submitConfirmation(){
+    if (Meteor.user().submitConfirmation ){
+      return "disabled";
+    }
+  }
+});
