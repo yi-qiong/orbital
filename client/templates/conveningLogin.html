@@ -1,6 +1,6 @@
 <template name="conveningLogin">
 	<style type="text/css">
-	body {
+		body {
     padding-top: 90px;
 }
 .panel-login {
@@ -99,6 +99,7 @@
 	background-color: #1CA347;
 	border-color: #1CA347;
 }
+
 	</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -125,16 +126,18 @@
 								<form id="login-form" data-toggle="validator" style="display: block;">
 									<div class="form-group">
 										<input type="text" name="loginEmail" id="loginEmail" tabindex="1" class="form-control" placeholder="NUS email" value="" required="required" data-required-error="Email is required." data-pattern-error="Register with your NUS email!" pattern="^[A-Za-z0-9._%+-]+@u.nus.edu$">
-									</div>
-									<small id="emailHelpBlock" class="form-text text-muted">
+										<small id="emailHelpBlock" class="form-text text-muted">
 					 				 NUS email only
 									</small>
 									<div class="help-block with-errors"></div>
+									</div>
+									
 
 									<div class="form-group">
 										<input type="password" name="loginPassword" id="loginPassword" tabindex="2" class="form-control" placeholder="Password" required="required" data-required-error="Password is required.">
+										<div class="help-block with-errors"></div>
 									</div>
-									<div class="help-block with-errors"></div>
+									
 
 									<div class="form-group">
 										<div class="row">
@@ -147,28 +150,27 @@
 								<form id="register-form" data-toggle="validator" style="display: none;">
 									<div class="form-group">
 										<input type="text" name="registerName" id="registerName" tabindex="1" class="form-control" placeholder="Full Name" value="" required="required" data-required-error="Name is required.">
+										<div class="help-block with-errors"></div>
 									</div>
-									<div class="help-block with-errors"></div>
+									
 
 									<div class="form-group">
-										<input type="email" name="registerEmail" id="registerEmail" tabindex="1" class="form-control" placeholder="NUS Email" value="" required="required" data-required-error="Email is required." data-pattern-error="Register with your NUS email!" pattern="^[A-Za-z0-9._%+-]+@u.nus.edu$">
-									</div>
-									<small id="emailHelpBlock" class="form-text text-muted">
+										<input type="email" name="registerEmail" id="registerEmail" tabindex="2" class="form-control" placeholder="NUS Email" value="" required="required" data-required-error="Email is required." data-pattern-error="Register with your NUS email!" pattern="^[A-Za-z0-9._%+-]+@u.nus.edu$">
+										<small id="emailHelpBlock" class="form-text text-muted">
 					 				 NUS email only
 									</small>
 									<div class="help-block with-errors"></div>
-
-									<div class="form-group">
-										<input type="password" name="registerPassword" id="registerPassword" tabindex="2" class="form-control" placeholder="Password" required="required" data-required-error="Password is required.">
 									</div>
-									<small id="passwordHelpBlock" class="form-text text-muted">
-					 				 Sign up with the same password as the player account
-									</small>
-									<div class="help-block with-errors"></div>
+									
 
-									<div class="help-block with-errors"></div>
 									<div class="form-group">
-										<input type="password" name="convening-password" id="convening_password" tabindex="2" class="form-control" placeholder="Convening Common Password" required="required" data-required-error="Password is required.">
+										<input type="password" name="registerPassword" id="registerPassword" tabindex="3" class="form-control" placeholder="Password" required="required" data-required-error="Password is required.">
+									<div class="help-block with-errors"></div>
+									</div>
+									
+									<div class="form-group">
+										<input type="password" name="convening-password" id="convening_password" tabindex="4" class="form-control" placeholder="Convening Common Password" required="required" data-required-error="Password is required.">
+										<div class="help-block with-errors"></div>
 									</div>
 									
 									<div class="form-group">
