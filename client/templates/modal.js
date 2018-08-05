@@ -17,6 +17,7 @@ Template.modal.events({
   	$('.ui.basic.modal').modal({
       onApprove : function() {
         console.log("onApprove");
+        Session.set('confirmDetails', true);
         Meteor.call('submitConfirmation', {}, function (error) {
           console.log("meteor.call working");
           if (error && error.error === "logged-out") {
