@@ -29,14 +29,20 @@ Template.sidebar.helpers({
 
 Template.sidebar.events({
   'click .sports': function(event, template) {
-    $('.item').removeClass('active');
-    $('.sports').addClass('active');
-    Template.currentTab.set("teams");
+    var confirm = Session.get('confirmDetails');
+    if (confirm != true) {
+      $('.item').removeClass('active');
+      $('.sports').addClass('active');
+      Template.currentTab.set("teams");
+    }
   },
   'click .availability': function(event, template) {
-    $('.item').removeClass('active');
-    $('.availability').addClass('active');
-    Template.currentTab.set("appointments");
+    var confirm = Session.get('confirmDetails');
+    if (confirm != true) {
+      $('.item').removeClass('active');
+      $('.availability').addClass('active');
+      Template.currentTab.set("appointments");
+    }
   },
   'click .confirm': function(event, template) {
     $('.item').removeClass('active');
