@@ -15,12 +15,17 @@ Template.register.events({
     'submit #contact-form': function(e, t) {
         e.preventDefault();
         // Retrieve the input field values
-        var playerEmail = $('#email').val(), 
-            password = $('#password').val(),
-            passwordAgain = $('#password-again').val();
+        var playerEmail = e.target.email.value;
+        var password = e.target.password.value;
+        var passwordAgain = e.target.confirm_password.value; 
 
-        
-            var isRegistered = RegisteredPlayers.findOne({email: playerEmail});
+            console.log(password);
+            console.log(passwordAgain);
+
+            if (password != passwordAgain) {
+                Bert.alert('Password do not match!', 'danger');
+            } else {
+                    var isRegistered = RegisteredPlayers.findOne({email: playerEmail});
             console.log(isRegistered);
             if (isRegistered == undefined) {
                 Bert.alert('Registration denied: You are not registered as an IHG Player', 'danger')
@@ -55,4 +60,5 @@ Template.register.events({
                 
             }
         }
+            }
 });
