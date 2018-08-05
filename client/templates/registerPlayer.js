@@ -3,7 +3,7 @@ import { Template } from 'meteor/templating';
 import './registerPlayer.html';
 import '/imports/api/registeredPlayers.js';
 
-//Meteor.subscribe('allUsers');
+
 Template.registerPlayer.onCreated(function() {
   this.autorun(() => {
     this.subscribe('registeredPlayers');
@@ -25,5 +25,7 @@ Template.registerPlayer.events({
             Meteor.call('sendEmail', playerEmail);
           }
         })
+        $('#contact-form')[0].reset();
     }
 });
+
