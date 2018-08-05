@@ -25,13 +25,21 @@ Meteor.methods({
     check(endTime, String);
     
 
+    var dateNstart = selectedDate + " " + startTime;
+    var momentStart = moment(dateNstart, 'DD-MM-YYYY HH:mm A');
+    var dateNend = selectedDate + " " + endTime;
+    var momentEnd = moment(dateNend, 'DD-MM-YYYY HH:mm A');
+
     Availability.insert({
       date: selectedDate,
       start: startTime,
       end: endTime,
+      startObj: momentStart,
+      endObj: momentEnd,
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });
+    
     console.log(Availability.find().fetch());
   },
   'blockout.remove'(id){
