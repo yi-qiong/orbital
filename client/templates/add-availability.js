@@ -49,6 +49,7 @@ Template.addAppointment.onCreated(function() {
   });
 });
 
+
 Template.addAppointment.events({
 
   'click #cancel': function() { //when player do not want to edit schedule
@@ -88,7 +89,9 @@ Template.addAppointment.events({
     var selectedDate = event.target.datePicker.value;
     var startTime = event.target.startTime.value;
     var endTime = event.target.endTime.value;
-
+    $('#datepicker').data('DateTimePicker').date(null);
+    $('#start_time').data('DateTimePicker').date(null); 
+    $('#end_time').data('DateTimePicker').date(null); //set to placeholder value
     console.log(selectedDate);
     console.log(startTime);
     console.log(endTime);
@@ -125,6 +128,8 @@ Template.addAppointment.events({
         document.getElementById("confirm").style.display="none";
         document.getElementById("cancel").style.display="none";
       }
+
+
       Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
         if ( error ) {
           Bert.alert( error.reason, 'danger' );
