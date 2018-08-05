@@ -7,9 +7,11 @@ Router.route('/', {
 Template.mainpage.events({
 	'click .playerUse': function() {
 		Router.go('/playerLogin')
+		window.location.reload(true);
 	},
 
 	'click .conveningUse': function() {
-		Router.go('/conveningLogin')
+		Router.go('/conveningLogin');
+		window.location.reload(true); 
 	}
 })
