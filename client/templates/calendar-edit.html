@@ -1,14 +1,38 @@
 <template name="editCalendar">
-  {{> calendarButton}} 
+
+<div class="ui grid">
+  <div class="one wide column hidden" id='eventActions' style="padding:0">
+    <div class="ui compact vertical icon menu" style= "margin-top: 61px">
+      <a class="item" id="edit">
+        <i class="edit icon"></i>
+      </a>
+      <a class="item" id="delete">
+        <i class="trash alternate icon"></i>
+      </a>
+      <!--<a class="item" id="view">
+        <i class="eye icon"></i>
+        View/hide
+      </a>-->
+    </div>
+  </div>
+
+  <div class="fifteen wide column centered">
+
   
-  <br>
-  <br>
     <!--Add the events calendar to the template.-->
   <div id="calendar"></div>
  
   <br>
   {{ > tooltips }}
   
+  <div class="ui modal">
+  
+    <div class = "content">
+      {{> calendarModal}}
+    </div>
+  </div>
+
+
   <div class="ui negative message">
     <i class="close icon"></i>
     <div class="header">
@@ -16,5 +40,7 @@
     </div>
     <!--<p> {{name}} is involved in both {{sport1}} and {{sport2}}</p>-->
   </div>
+  </div>
+</div>
   
 </template>

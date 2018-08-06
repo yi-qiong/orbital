@@ -27,6 +27,7 @@ Template.teams.rendered = function() { //behaviour after template is loaded
       })
     ;
   }
+
   this.$('.ui.form') //validate
     .form({
        fields: {
@@ -58,7 +59,7 @@ Template.teams.rendered = function() { //behaviour after template is loaded
 
 
 Template.teams.helpers({
-  submitted: function() {
+  editable: function() {
     if (Meteor.user().teams){ // if saved form before
       if (Meteor.user().submitConfirmation || !Template.instance().editMode.get()){ 
       //submitted confirmation or not in edit mode
@@ -91,6 +92,12 @@ Template.teams.helpers({
       return true;
     }else {
       return Template.instance().editMode.get();
+    }
+  },
+
+  submitted(){
+    if (Meteor.user().submitConfirmation){
+      return "disabled";
     }
   }
 })

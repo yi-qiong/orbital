@@ -8,16 +8,18 @@ import moment from 'moment';
 
 
 Template.editCalendar.onCreated(function() {
+  $('body .modals').remove();
   this.autorun(() => {
     this.subscribe('matches');
     this.subscribe('availability');
   });
-  Session.set ('isEditMode', false);
+  Session.set ('currentEditEvent', null);
 });
 
 
 
 Template.editCalendar.rendered = function() {
+
   var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
@@ -32,8 +34,8 @@ Template.editCalendar.rendered = function() {
     minTime: '08:00',
     maxTime:'22:00',
     slotDuration: '00:30:00', // 30 mins slots 
-    nowIndicator:true,
-    editable: true,
+    editable: false,
+    draggable: false,
     //events
     eventSources: [
     { //sch hours
@@ -51,68 +53,81 @@ Template.editCalendar.rendered = function() {
       ]
     },
     { //matches
-      events: function( start, end, timezone, callback ) { 
-        console.log(Matches.find({}).fetch());
+      events: function( start, end, timezone, callback ) {
         callback(Matches.find({}).fetch());
       },
       color: '#59a27a',
       id: 'matches'
     }
     ],
-
-
-
     //functions
     eventRender: function( event, element, view ) {  //render popup when creating event, will popup during hover
       if (event.source.id =='matches'){
-        $(element).attr('data-tooltip', "<b>" + event.title + "</b>  <br>" + event.description); 
-        $(element).attr('data-inverted', ""); 
+        $(element).attr('data-html', "<b>" + event.title + "</b>  <br>" + event.description); 
+        $(element).attr('data-variation', "inverted small");
+        $(element).popup()
+;
       }
     },
-    /*eventMouseover: function( event, jsEvent, view ) {
-      console.log(event);
-      if(!Session.equals ('isEditMode', true)){
-        Session.set('currentEditEvent',event._id);
-        console.log("mouseover");
-      }
-    },*/
- 
-    eventClick: function(calEvent, jsEvent, view) {
-      console.log('clicked');
-      if(!Session.equals ('isEditMode', true)){ //open Edit Mode
-        Session.set ('isEditMode', true);
-        Session.set('currentEditEvent', {
-          sport : calEvent.sport,
-          round : calEvent.round,
-          halls : calEvent.halls 
-        }); //for modal
-        
-        //showAvailableSlots(calEvent);
+    
+    dayClick: function(date, jsEvent, view) {
+      Session.set("currentDate", date.format()); //'YYYY-MM-DDThh:mm:ss'
+      $('.ui.modal').modal('show');
+    },
 
-        $('#calendar').fullCalendar('addEventSource' ,{
-          id: 'available slots' ,
-          events: [
-            {
-              title: 'Event1',
-              start: '2018-07-27'
-            }           
-          ],
-          color: 'yellow',   // an option!
-          textColor: 'black' // an option!
-        });
-      } else { //close Edit Mode
-        Session.set ('isEditMode', false);
+    eventClick: function(calEvent, jsEvent, view) {
+      Session.set("eventInfo",{ //for writing in modal
+        sport: calEvent.sport,
+        round: calEvent.round,
+        halls: calEvent.halls
+      });
+      console.log('clicked');
+      if(calEvent._id == Session.get("currentEditEvent")){ //click back on the same event to close eventMode
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+        //close side bar event menu
+        $('#eventActions').transition('hide');
+        calEvent.editable = false;
+        calEvent.draggable = false;
+        $('#calendar').fullCalendar('updateEvent', calEvent);
+      } else { //click on another event OR open new event
+        $('#eventActions').transition('show');
+        Session.set('prevEditEvent', Session.get('currentEditEvent'));
+        Session.set('currentEditEvent',calEvent._id);
+        $('#calendar').fullCalendar( 'removeEventSource', 'available slots'); //remove current available slots
+        $('#calendar').fullCalendar('addEventSource' ,{ //add current available slots
+          id: 'available slots' ,
+          events: calEvent.blockOuts, //array
+          rendering: 'inverse-background', //so it shows the available slots instead
+          overlap: false, //cannot drag or resize matches onto blockouts
+          color: 'yellow'
+        })
+        var eventId =Session.get('prevEditEvent');
+        var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId );
+        prevEvent.editable = false;
+        prevEvent.draggable = false;
+        $('#calendar').fullCalendar('updateEvent', prevEvent);
+        calEvent.editable = true;
+        calEvent.draggable = true;
+        $('#calendar').fullCalendar('updateEvent', calEvent);
+
       }
-      console.log(Session.get ('isEditMode'));
     }
   }).data().fullCalendar;
-    
+
   Tracker.autorun(function(){
     allReqsCursor = Matches.find().fetch();
     if(calendar){
       calendar.refetchEvents();
+    }
+  });
+
+
+  this.$('.ui.modal').modal({
+    inverted: true,
+     autofocus: false,
+     onApprove : function() {
+      //probably wont execute since nvr include <actions>
     }
   });
 }; 
@@ -123,26 +138,39 @@ Template.editCalendar.rendered = function() {
 
 
 Template.editCalendar.events({
-  'mousedown .fc-event'(e, t) {
-    console.log("mousedown");
-    var eventId =  Session.get('currentEditEvent');
-    var event = $("#calendar").fullCalendar( 'clientEvents', eventId)[0];
+  'click #edit': function(e, t) {
+    $('.ui.modal').modal('show'); //modal appears
+    $(this).blur(); //prevent button focus
+  },
+  'click #delete': function(e, t) { 
+    var eventId =Session.get('currentEditEvent');
+    var event = $("#calendar").fullCalendar( 'clientEvents', eventId );
+    $("#calendar").fullCalendar('removeEvents', remove(event));
+    function remove(event){
+      return true;
+    }
+    Meteor.call('deleteMatch', eventId , function (error) {
+      if (error) {
+      // show a nice error message
+        Bert.alert('error', 'danger');
+      }else{
+        Bert.alert( 'Match deleted', 'success' );
+      } 
+    });
+    $(this).blur(); //prevent button focus
+    Session.set('currentEditEvent',null);
+    $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+    //close side bar event menu
+    $('#eventActions').transition('hide');
   }
+  /*'click #view': function(e, t) { 
+    var eventId =Session.get('currentEditEvent');
+    var event = $("#calendar").fullCalendar( 'clientEvents', eventId );
+    $(this).blur(); //prevent button focus
+  }*/
     
 });
-  /*  showAvailableSlots(event);  //function
-  },
-  'mouseup .fc-event'(e, t) {
-    $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
-  },
-  'click '(e,t) {
-    console.log("e.target");
-    Session.set ('editMode', true);
-    console.log(Session.get ('editMode'));
-    template.$('#cal').fullCalendar('refetchEvents');
-  }
-})
-
+  /*  
 
 function showAvailableSlots(event){
     console.log(event);
@@ -165,6 +193,3 @@ function showAvailableSlots(event){
 }
 
 */
-
-
-

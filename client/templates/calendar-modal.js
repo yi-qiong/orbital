@@ -7,20 +7,23 @@ Template.calendarModal.rendered= function() {
   this.$('.ui.dropdown').dropdown();
   this.$('.ui.checkbox').checkbox();
   
-  console.log(Session.get('isEditMode'));
-  if (Session.equals ('isEditMode', true)){
-    console.log("write values");
-    var event =  Session.get('currentEditEvent');
+  Tracker.autorun(function(){
+    console.log(!Session.equals('currentEditEvent',null));
+    if(!Session.equals('currentEditEvent',null)){ //eventMode
+      
 
-    this.$('.ui.form')
-    // set as saved values once template is rendered
-      .form('set values', {
-        sport   : event.sport,
-        round   : event.round,
-        halls   : event.halls,
-      })
-    ;
-  }
+
+      this.$('.ui.form')
+      // set as saved values once template is rendered
+        .form('set values', {
+          sport   : Session.get("eventInfo").sport,
+          round   : Session.get("eventInfo").round,
+          halls   : Session.get("eventInfo").halls
+        })
+      ;
+      console.log("write values");
+    }
+  });
 
   this.$('.ui.form') //validate
     .form({
@@ -35,31 +38,35 @@ Template.calendarModal.rendered= function() {
       onSuccess: function(event, fields){
         event.preventDefault();
         $('.ui.modal').modal('hide'); //only hide when all fields are valid
-        Bert.alert( 'Match added successfully', 'success' );
         var $form = $('.ui.form');
         var sport = $form.form('get value', 'sport');
         var round = $form.form('get value', 'round');
         var halls = $form.form('get value', 'halls');
-        if (Session.equals ('isEditMode', true)){
-          Meteor.call('updateMatch',{
-            sport: sport,
-            round: round,
-            halls: halls,
-          });
-        } else {
-          Meteor.call('createMatch', {
-            sport: sport,
-            round: round,
-            halls: halls,
-          }, function (error) {
-            if (error && error.error === "logged-out") {
+        if(!Session.equals('currentEditEvent',null)){
+          Meteor.call('updateMatch', Session.get('currentEditEvent'),sport,round,halls, function (error) {
+            if (error) {
               // show a nice error message
-              Session.set("errorMessage", "Please log in before submitting your details.");
+              Bert.alert('error', 'danger');
+            }else{
+              Bert.alert( 'Match updated successfully', 'success' );
             } 
           });
-        }   
-       }
+        } else {
+          var currentDate = Session.get('currentDate'); //'YYYY-MM-DDThh:mm:ss'
+          Meteor.call('createMatch', sport, round, halls, currentDate , function (error) {
+            if (error) {
+              // show a nice error message
+              Bert.alert('error', 'danger');
+            }else{
+              Bert.alert( 'Match added successfully', 'success' );
+            } 
+          });
+           
+        }
+        $('.ui.form').form('clear');
+      }
     });
+
 };
 
 Template.calendarModal.events({
