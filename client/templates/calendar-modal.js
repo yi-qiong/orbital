@@ -6,25 +6,6 @@ import '/imports/api/matches.js'; //meteor methods
 Template.calendarModal.rendered= function() {
   this.$('.ui.dropdown').dropdown();
   this.$('.ui.checkbox').checkbox();
-  
-  Tracker.autorun(function(){
-    console.log(!Session.equals('currentEditEvent',null));
-    if(!Session.equals('currentEditEvent',null)){ //eventMode
-      
-
-
-      this.$('.ui.form')
-      // set as saved values once template is rendered
-        .form('set values', {
-          sport   : Session.get("eventInfo").sport,
-          round   : Session.get("eventInfo").round,
-          halls   : Session.get("eventInfo").halls
-        })
-      ;
-      console.log("write values");
-    }
-  });
-
   this.$('.ui.form') //validate
     .form({
       fields: {
@@ -43,6 +24,7 @@ Template.calendarModal.rendered= function() {
         var round = $form.form('get value', 'round');
         var halls = $form.form('get value', 'halls');
         if(!Session.equals('currentEditEvent',null)){
+          
           Meteor.call('updateMatch', Session.get('currentEditEvent'),sport,round,halls, function (error) {
             if (error) {
               // show a nice error message
@@ -66,6 +48,7 @@ Template.calendarModal.rendered= function() {
         $('.ui.form').form('clear');
       }
     });
+  $('.ui.form').form('reset');
 
 };
 
@@ -75,6 +58,23 @@ Template.calendarModal.events({
     $('.ui.form').form('clear'); //clear form before closing modal
     $('.ui.modal').modal('hide');
 }
+})
+
+Template.editCalendar.events({
+  'click #edit': function(e, t) {
+    $('.ui.form').form('reset');
+    if(!Session.equals('currentEditEvent',null)){ //eventMode
+      $('.ui.form')
+      // set as saved values once template is rendered
+        .form('set values', {
+          sport   : Session.get("eventInfo").sport,
+          round   : Session.get("eventInfo").round,
+          halls   : Session.get("eventInfo").halls
+        })
+      ;
+      //console.log("write values");
+    }
+  }
 })
 
 

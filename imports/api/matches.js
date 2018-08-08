@@ -16,25 +16,63 @@ Meteor.methods({
       throw new Meteor.Error('logged-out');
     }*/  
     var users = [];//empty array
-    var blockOuts = getBlockOuts();
+    var blockOuts = getBlockOuts(users,sport, halls); //all blockouts
     var weekRange;
-    var start = getStart(currentDate);
+    var start = getStart(currentDate,blockOuts,0);
+    blockOuts.push({
+      dow: [1,2,3,4,5], 
+      start  : '8:00',
+      end : '18:00'           
+    })
 
     Matches.insert({
       title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
-      description: description(),
+      description: description(halls),
       sport: sport,
       round: round,
       halls: halls,
       start: start,
-      end: moment(start).add(2, 'h'), 
+      end: moment(start).add(2, 'h').format(), 
       users: users, //for clashes and overlap
-      blockOuts : blockOuts
-      //duration is by default 2 hours when {end} is not specified in an event object
+      blockOuts : blockOuts //dummy to test out 
     }); 
     console.log(Matches.find({}).fetch());
+  },
 
-    function description(){
+  'deleteMatch'(id) { 
+    Matches.remove(id);
+  },
+
+  'updateMatch'(eventId, sport, round, halls){
+
+    var users = [];//empty array
+    var blockOuts = getBlockOuts(users,sport, halls);
+    var match = Matches.findOne({_id: eventId});
+    var duration = moment(match.end).diff(moment.start, 'minutes'); //maintain the duration of the match 
+    var weekRange;
+    var start = getStart(match.start,blockOuts,duration);
+
+    Matches.update(eventId, { 
+      $set: {
+        title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
+        description: description(halls),
+        sport: sport,
+        round: round,
+        halls: halls,
+        start: start,
+        end: moment(start).add(duration, 'm').format(), 
+        users: users, //for clashes and overlap
+        blockOuts : blockOuts
+      }
+    });
+    console.log(Matches.find({}).fetch());
+  }
+})
+
+
+
+//functions
+    function description(halls){
       if (halls.length==7){
         return 'All halls';
       } else if (halls.length==2){
@@ -48,7 +86,7 @@ Meteor.methods({
       }
     }
 
-    function getBlockOuts() {
+    function getBlockOuts(users, sport, halls) {
       var cursor = Meteor.users.find({
         hall: {$in:halls}, //check if user's hall is in the array 
         teams: sport //searches for all users whose teams array include the given sport
@@ -61,43 +99,45 @@ Meteor.methods({
       .fetch();// get the blockouts of all players involved
     }
 
-    
-
-    function getStart(currentDate){ //'YYYY-MM-DDThh:mm:ss'
-      console.log(moment(currentDate));
+    function getStart(currentDate,blockOuts,duration){ //'YYYY-MM-DDThh:mm:ss'
+      //console.log(moment(currentDate));
       var weekStart = moment(currentDate, moment.ISO_8601).startOf('week');
       var weekEnd = moment(currentDate, moment.ISO_8601).endOf('week');
       weekRange = moment.range(weekStart,weekEnd);
 
       var time = moment(weekStart); //cloning the weekStart moment
-      console.log(weekStart.format());
-      console.log(weekEnd.format());
-      console.log(time.format());
+      //console.log(weekStart.format());
+      //console.log(weekEnd.format());
+      //console.log(time.format());
 
-      while(time.isBefore(weekEnd) && (time.hour() > 21 || time.hour() < 8 || isBlockOut(time))) { // out of calendar display 
+      while(time.isBefore(weekEnd) && (time.hour() > 21 || time.hour() < 8 || isBlockOut(time,blockOuts,duration))) { // out of calendar display 
         time.add(30, 'm'); //add 30 minutes and loop again
-        console.log(time.format());
+        //console.log(time.format());
       }
 
       if (time.isSameOrAfter(weekEnd)){ //no available slots this week
         //display ui error message???
       }
 
-      console.log(time.format());
+      //console.log(time.format());
       return time.format(); 
-
     }
 
-    function isBlockOut(time){
+    function isBlockOut(time,blockOuts,duration){
       var weekBO = blockOuts.filter( function (blockout){
         var startObj = moment(blockout.start);
         var endObj = moment(blockout.end);
         var blockOutRange = moment.range(startObj, endObj);
 
-        return blockOutRange.overlaps(weekRange);
+        return blockOutRange.overlaps(weekRange); //return that week's blockouts
       });
-
-      var matchDuration = moment.rangeFromInterval('hour', 2, time);
+      var matchDuration;
+      if (duration === 0){
+        matchDuration = moment.rangeFromInterval('hour', 2, time);
+      } else {
+        matchDuration = moment.rangeFromInterval('minutes', duration,time);
+      }
+      
       //foreach blockout in weekBO{ if overlap, then return yes} 
       weekBO.forEach(function(blockout) {
         startObj = moment(blockout.start);
@@ -109,26 +149,3 @@ Meteor.methods({
       });
       return false;
     }
-    /*Matches.update(Meteor.userId(), { //update field in user docs
-      $set: {
-        hall: hall,
-        gender: gender,
-        teams: teams,
-      }
-    });*/
-  },
-  'deleteMatch'(id) { 
-    Matches.remove(id);
-  },
-  'updateMatch'(eventId, sport, round, halls){
-    Matches.update(eventId, { 
-      $set: {
-        sport: sport,
-        round: round,
-        halls: halls,
-      }
-    });
-    console.log(Matches.find({}).fetch());
-  }
-
-})

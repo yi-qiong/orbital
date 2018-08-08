@@ -38,41 +38,37 @@ Template.editCalendar.rendered = function() {
     draggable: false,
     //events
     eventSources: [
-    { //sch hours
-      events: [ 
-        {
-          title: 'School Hours',
-          dow: [1,2,3,4,5], 
-          start  : '8:00',
-          end : '18:00',
-          rendering: 'background',
-          editable: false,
-          color: '#d5e1df',
-          overlap: false
-        }
-      ]
-    },
-    { //matches
+      { //matches
       events: function( start, end, timezone, callback ) {
-        callback(Matches.find({}).fetch());
-      },
-      color: '#59a27a',
-      id: 'matches'
-    }
+          callback(Matches.find({}).fetch());
+        },
+        color: '#0B7A75',
+        id: 'matches'
+      }
     ],
     //functions
     eventRender: function( event, element, view ) {  //render popup when creating event, will popup during hover
       if (event.source.id =='matches'){
         $(element).attr('data-html', "<b>" + event.title + "</b>  <br>" + event.description); 
         $(element).attr('data-variation', "inverted small");
-        $(element).popup()
-;
+        $(element).popup();
       }
     },
     
     dayClick: function(date, jsEvent, view) {
-      Session.set("currentDate", date.format()); //'YYYY-MM-DDThh:mm:ss'
-      $('.ui.modal').modal('show');
+      if(Session.equals('currentEditEvent',null)){ //not eventMode
+        Session.set("currentDate", date.format()); //'YYYY-MM-DDThh:mm:ss' //create new Match
+        $('.ui.modal').modal('show');
+      } else { //close eventMode
+        var eventId = Session.get("currentEditEvent");
+        var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
+        event.editable = false;
+        event.draggable = false;
+        $('#calendar').fullCalendar('updateEvent', event);
+        Session.set('currentEditEvent',null);
+        $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+        $('#eventActions').transition('hide');
+      }
     },
 
     eventClick: function(calEvent, jsEvent, view) {
@@ -97,19 +93,33 @@ Template.editCalendar.rendered = function() {
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots'); //remove current available slots
         $('#calendar').fullCalendar('addEventSource' ,{ //add current available slots
           id: 'available slots' ,
-          events: calEvent.blockOuts, //array
+          events: [
+            {
+              dow: [1,2,3,4,5], 
+              start  : '8:00',
+              end : '18:00'           
+            },
+            calEvent.blockOuts
+          ],
           rendering: 'inverse-background', //so it shows the available slots instead
           overlap: false, //cannot drag or resize matches onto blockouts
-          color: 'yellow'
+          color: '#d5e1df'
         })
         var eventId =Session.get('prevEditEvent');
-        var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId );
+        var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
         prevEvent.editable = false;
         prevEvent.draggable = false;
         $('#calendar').fullCalendar('updateEvent', prevEvent);
         calEvent.editable = true;
         calEvent.draggable = true;
         $('#calendar').fullCalendar('updateEvent', calEvent);
+        console.log(this);
+        $(this)
+  .transition('set looping')
+  .transition('pulse', '2000ms')
+;
+        console.log(prevEvent);
+        console.log(calEvent);
 
       }
     }
@@ -141,10 +151,11 @@ Template.editCalendar.events({
   'click #edit': function(e, t) {
     $('.ui.modal').modal('show'); //modal appears
     $(this).blur(); //prevent button focus
+    $('form').form('reset');
   },
   'click #delete': function(e, t) { 
     var eventId =Session.get('currentEditEvent');
-    var event = $("#calendar").fullCalendar( 'clientEvents', eventId );
+    var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
     $("#calendar").fullCalendar('removeEvents', remove(event));
     function remove(event){
       return true;
@@ -163,11 +174,6 @@ Template.editCalendar.events({
     //close side bar event menu
     $('#eventActions').transition('hide');
   }
-  /*'click #view': function(e, t) { 
-    var eventId =Session.get('currentEditEvent');
-    var event = $("#calendar").fullCalendar( 'clientEvents', eventId );
-    $(this).blur(); //prevent button focus
-  }*/
     
 });
   /*  
