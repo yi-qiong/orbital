@@ -56,12 +56,15 @@ Template.editCalendar.rendered = function() {
     },
     
     dayClick: function(date, jsEvent, view) {
-      if(Session.equals('currentEditEvent',null)){ //not eventMode
+      console.log(jsEvent.target);
+      var eventId = Session.get("currentEditEvent");
+      var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
+      if(Session.equals('currentEditEvent',null)){ //not eventMode --> open eventMode
         Session.set("currentDate", date.format()); //'YYYY-MM-DDThh:mm:ss' //create new Match
         $('.ui.modal').modal('show');
+      } else if (jsEvent.target.classList.contains('fc-bgevent')) { //is eventMode && click on available slots
+        Meteor.call('moveMatch',eventId, date.format());
       } else { //close eventMode
-        var eventId = Session.get("currentEditEvent");
-        var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
         event.editable = false;
         event.draggable = false;
         $('#calendar').fullCalendar('updateEvent', event);
@@ -113,11 +116,6 @@ Template.editCalendar.rendered = function() {
         calEvent.editable = true;
         calEvent.draggable = true;
         $('#calendar').fullCalendar('updateEvent', calEvent);
-        console.log(this);
-        $(this)
-  .transition('set looping')
-  .transition('pulse', '2000ms')
-;
         console.log(prevEvent);
         console.log(calEvent);
 
@@ -148,6 +146,18 @@ Template.editCalendar.rendered = function() {
 
 
 Template.editCalendar.events({
+  /*'click .' :function(e,t){
+    if(!$(e.target).closest('#calendar').length&&!$(e.target).closest('#edit')&&!$(e.target).closest('#delete')) {
+      var eventId = Session.get("currentEditEvent");
+      var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
+      event.editable = false;
+      event.draggable = false;
+      $('#calendar').fullCalendar('updateEvent', event);
+      Session.set('currentEditEvent',null);
+      $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+      $('#eventActions').transition('hide');
+    }
+  },*/
   'click #edit': function(e, t) {
     $('.ui.modal').modal('show'); //modal appears
     $(this).blur(); //prevent button focus

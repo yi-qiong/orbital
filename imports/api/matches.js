@@ -66,6 +66,17 @@ Meteor.methods({
       }
     });
     console.log(Matches.find({}).fetch());
+  },
+
+  'moveMatch'(eventId, startTime){
+    var match = Matches.findOne({_id: eventId});
+    var duration = moment(match.end).diff(moment.start, 'minutes'); //maintain the duration of the match 
+    Matches.update(eventId, { 
+      $set: {
+        start: startTime,
+        end: moment(startTime).add(duration, 'm').format(), 
+      }
+    });
   }
 })
 
