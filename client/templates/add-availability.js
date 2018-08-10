@@ -28,11 +28,11 @@ Template.addAppointment.onRendered( () => {
 
 
 Template.addAppointment.onCreated(function() {
+  
   this.autorun(() => {
     this.subscribe('availability');
     this.subscribe('userInfo');
   });
-
   this.autorun( () =>  { 
     var isEdit = Session.get('selectedBlockOut');
     if (isEdit != null) {//only executed if someone clicks #edit
@@ -49,6 +49,13 @@ Template.addAppointment.onCreated(function() {
   });
 });
 
+Template.addAppointment.helpers({
+  disabled: function() {
+    if (Meteor.user().submitConfirmation) {
+      return 'disabled';
+    }
+  }
+});
 
 Template.addAppointment.events({
 
