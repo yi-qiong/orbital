@@ -53,20 +53,6 @@ Template.editCalendar.rendered = function() {
         $(element).attr('data-variation', "inverted small");
         $(element).popup();
       }
-      console.log(event);
-      var eventId = event._id;
-      console.log(eventId);
-      if (!Session.equals("animate", null)) { //fade event that is in edit mode in and out
-        var editEvent = Session.get("animate");
-        if (eventId === editEvent) {
-          console.log("same event");
-          element.css('background-color', '#9600ff'); //change colour of event
-          setInterval(function(){
-          element.fadeOut(300).delay(300).fadeIn(800);
-          },2000);
-        }
-        element.css('background-color', '##0B7A75');
-      } 
     },
     
     dayClick: function(date, jsEvent, view) {
@@ -94,13 +80,8 @@ Template.editCalendar.rendered = function() {
         round: calEvent.round,
         halls: calEvent.halls
       });
-      console.log(calEvent);
-      var eventId = calEvent._id;
-      Session.set("animate", eventId);
-      console.log('clicked');
-      //Session.set("animate");
+      
       if(calEvent._id == Session.get("currentEditEvent")){ //click back on the same event to close eventMode
-        Session.set("animate", null);
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
         //close side bar event menu
@@ -135,14 +116,6 @@ Template.editCalendar.rendered = function() {
         calEvent.editable = true;
         calEvent.draggable = true;
         $('#calendar').fullCalendar('updateEvent', calEvent);
-<<<<<<< HEAD
-=======
-        console.log(this);
-        $(this)
-        .transition('set looping')
-        .transition('pulse', '2000ms')
-        ;
->>>>>>> 153f2a388cd1567748e1d0b2374a8d614914c315
         console.log(prevEvent);
         console.log(calEvent);
 
