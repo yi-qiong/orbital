@@ -63,17 +63,14 @@ Template.calendarModal.events({
 Template.editCalendar.events({
   'click #edit': function(e, t) {
     $('.ui.form').form('reset');
-    if(!Session.equals('currentEditEvent',null)){ //eventMode
-      $('.ui.form')
-      // set as saved values once template is rendered
-        .form('set values', {
-          sport   : Session.get("eventInfo").sport,
-          round   : Session.get("eventInfo").round,
-          halls   : Session.get("eventInfo").halls
-        })
-      ;
-      //console.log("write values");
-    }
+    $('.ui.form')
+    // set as saved values once template is rendered
+     .form('set values', {
+      sport   : Session.get("eventInfo").sport,
+      round   : Session.get("eventInfo").round,
+      halls   : Session.get("eventInfo").halls
+      })
+    ;
   }
 })
 

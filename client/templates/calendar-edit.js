@@ -35,7 +35,7 @@ Template.editCalendar.rendered = function() {
     maxTime:'22:00',
     slotDuration: '00:30:00', // 30 mins slots 
     editable: false,
-    draggable: false,
+    dragScroll: false,
     //events
     eventSources: [
       { //matches
@@ -54,24 +54,35 @@ Template.editCalendar.rendered = function() {
         $(element).popup();
       }
     },
+
+    eventAllow: function(dropLocation, draggedEvent) {
+      return dropLocation.start.hour()>= 8 && (dropLocation.end.hour()<22 || (dropLocation.end.hour()==22 && dropLocation.end.minutes()==0)); 
+    },
     
     dayClick: function(date, jsEvent, view) {
-      console.log(jsEvent.target);
       var eventId = Session.get("currentEditEvent");
       var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
-      if(Session.equals('currentEditEvent',null)){ //not eventMode --> open eventMode
-        Session.set("currentDate", date.format()); //'YYYY-MM-DDThh:mm:ss' //create new Match
-        $('.ui.modal').modal('show');
-      } else if (jsEvent.target.classList.contains('fc-bgevent')) { //is eventMode && click on available slots
-        Meteor.call('moveMatch',eventId, date.format());
-      } else { //close eventMode
+      if (jsEvent.target.classList.contains('fc-bgevent')) { //is eventMode && click on available slots
+        var duration = moment.duration(moment(event.end).diff(moment(event.start)));
+        var end = moment(date).add(duration);
+        Meteor.call('moveMatch',eventId, date.format(), end.format());
+      } else { //close eventMode 
         event.editable = false;
-        event.draggable = false;
         $('#calendar').fullCalendar('updateEvent', event);
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
-        $('#eventActions').transition('hide');
       }
+    },
+    eventDrop: function(event, delta, revertFunc) {
+      var start, end;
+      if(!event.start.hasTime()){ //dropped in a all-day area
+        start = event.start.format() +"T08:00:00"; //'YYYY-MM-DDThh:mm:ss'
+        end = event.end.format() +"T22:00:00";
+      } else { //timed area
+        start = event.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        end = event.end.format();
+      }
+      Meteor.call('moveMatch',event._id, start, end );
     },
 
     eventClick: function(calEvent, jsEvent, view) {
@@ -85,9 +96,7 @@ Template.editCalendar.rendered = function() {
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
         //close side bar event menu
-        $('#eventActions').transition('hide');
         calEvent.editable = false;
-        calEvent.draggable = false;
         $('#calendar').fullCalendar('updateEvent', calEvent);
       } else { //click on another event OR open new event
         $('#eventActions').transition('show');
@@ -111,10 +120,8 @@ Template.editCalendar.rendered = function() {
         var eventId =Session.get('prevEditEvent');
         var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
         prevEvent.editable = false;
-        prevEvent.draggable = false;
         $('#calendar').fullCalendar('updateEvent', prevEvent);
         calEvent.editable = true;
-        calEvent.draggable = true;
         $('#calendar').fullCalendar('updateEvent', calEvent);
         console.log(prevEvent);
         console.log(calEvent);
@@ -182,9 +189,12 @@ Template.editCalendar.events({
     Session.set('currentEditEvent',null);
     $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
     //close side bar event menu
-    $('#eventActions').transition('hide');
-  }
-    
+  },
+  'click #add': function(e, t) {
+    Session.set("currentDate", $('#calendar').fullCalendar('getDate').format()); //'YYYY-MM-DDThh:mm:ss' 
+    $('.ui.modal').modal('show'); //modal appears
+    $(this).blur(); //prevent button focus
+  }, 
 });
   /*  
 
@@ -209,3 +219,11 @@ function showAvailableSlots(event){
 }
 
 */
+Template.editCalendar.helpers({
+  eventMode: function(){
+    if(Session.get('currentEditEvent') === null){
+      return false;
+    }
+    return true;
+  }
+});
