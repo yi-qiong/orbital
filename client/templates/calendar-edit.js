@@ -36,6 +36,7 @@ Template.editCalendar.rendered = function() {
     slotDuration: '00:30:00', // 30 mins slots 
     editable: false,
     dragScroll: false,
+    allDaySlot : false,
     //events
     eventSources: [
       { //matches
@@ -53,7 +54,13 @@ Template.editCalendar.rendered = function() {
         $(element).attr('data-variation', "inverted small");
         $(element).popup();
       }
+      var eventId = Session.get("currentEditEvent");
+      if(eventId === event._id){
+        event.editable = true;
+        $('#calendar').fullCalendar('updateEvent', event);
+      }
     },
+
 
     eventAllow: function(dropLocation, draggedEvent) {
       return dropLocation.start.hour()>= 8 && (dropLocation.end.hour()<22 || (dropLocation.end.hour()==22 && dropLocation.end.minutes()==0)); 
@@ -65,24 +72,18 @@ Template.editCalendar.rendered = function() {
       if (jsEvent.target.classList.contains('fc-bgevent')) { //is eventMode && click on available slots
         var duration = moment.duration(moment(event.end).diff(moment(event.start)));
         var end = moment(date).add(duration);
-        Meteor.call('moveMatch',eventId, date.format(), end.format());
+        event.start = date.format();
+        event.end= end.format();
+        $('#calendar').fullCalendar('updateEvent', event);
       } else { //close eventMode 
         event.editable = false;
         $('#calendar').fullCalendar('updateEvent', event);
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+        var start = event.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var end = event.end.format();
+        Meteor.call('moveMatch',event._id, start, end );
       }
-    },
-    eventDrop: function(event, delta, revertFunc) {
-      var start, end;
-      if(!event.start.hasTime()){ //dropped in a all-day area
-        start = event.start.format() +"T08:00:00"; //'YYYY-MM-DDThh:mm:ss'
-        end = event.end.format() +"T22:00:00";
-      } else { //timed area
-        start = event.start.format(); //'YYYY-MM-DDThh:mm:ss'
-        end = event.end.format();
-      }
-      Meteor.call('moveMatch',event._id, start, end );
     },
 
     eventClick: function(calEvent, jsEvent, view) {
@@ -98,8 +99,10 @@ Template.editCalendar.rendered = function() {
         //close side bar event menu
         calEvent.editable = false;
         $('#calendar').fullCalendar('updateEvent', calEvent);
+        var start = calEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var end = calEvent.end.format();
+        Meteor.call('moveMatch',calEvent._id, start, end );
       } else { //click on another event OR open new event
-        $('#eventActions').transition('show');
         Session.set('prevEditEvent', Session.get('currentEditEvent'));
         Session.set('currentEditEvent',calEvent._id);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots'); //remove current available slots
