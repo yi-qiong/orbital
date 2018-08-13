@@ -54,11 +54,6 @@ Template.editCalendar.rendered = function() {
         $(element).attr('data-variation', "inverted small");
         $(element).popup();
       }
-      var eventId = Session.get("currentEditEvent");
-      if(eventId === event._id){
-        event.editable = true;
-        $('#calendar').fullCalendar('updateEvent', event);
-      }
     },
 
 
@@ -102,11 +97,11 @@ Template.editCalendar.rendered = function() {
         var start = calEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
         var end = calEvent.end.format();
         Meteor.call('moveMatch',calEvent._id, start, end );
-      } else { //click on another event OR open new event
+      } else if (!Session.equals('currentEditEvent',null)) { //click on another event while in eventMode
         Session.set('prevEditEvent', Session.get('currentEditEvent'));
         Session.set('currentEditEvent',calEvent._id);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots'); //remove current available slots
-        $('#calendar').fullCalendar('addEventSource' ,{ //add current available slots
+        $('#calendar').fullCalendar('addEventSource', { //add current available slots
           id: 'available slots' ,
           events: [
             {
@@ -119,16 +114,34 @@ Template.editCalendar.rendered = function() {
           rendering: 'inverse-background', //so it shows the available slots instead
           overlap: false, //cannot drag or resize matches onto blockouts
           color: '#d5e1df'
-        })
+        });
         var eventId =Session.get('prevEditEvent');
         var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
         prevEvent.editable = false;
         $('#calendar').fullCalendar('updateEvent', prevEvent);
+        var start = prevEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var end = prevEvent.end.format();
+        Meteor.call('moveMatch', prevEvent._id, start, end );
         calEvent.editable = true;
         $('#calendar').fullCalendar('updateEvent', calEvent);
-        console.log(prevEvent);
-        console.log(calEvent);
-
+      } else { //open new event      
+        Session.set('currentEditEvent',calEvent._id);
+        $('#calendar').fullCalendar('addEventSource', { //add current available slots
+          id: 'available slots' ,
+          events: [
+            {
+              dow: [1,2,3,4,5], 
+              start  : '8:00',
+              end : '18:00'           
+            },
+            calEvent.blockOuts
+          ],
+          rendering: 'inverse-background', //so it shows the available slots instead
+          overlap: false, //cannot drag or resize matches onto blockouts
+          color: '#d5e1df'
+        });
+        calEvent.editable = true;
+        $('#calendar').fullCalendar('updateEvent', calEvent);
       }
     }
   }).data().fullCalendar;
