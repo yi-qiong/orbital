@@ -4,21 +4,20 @@
   <div class="one wide column centered" id='eventActions' style="padding:0">
     <div class="ui compact vertical icon menu" style= "margin-top: 61px">
       {{#if eventMode}}
-      <a class="item" id="edit">
-        <i class="edit icon"></i>
-      </a>
-      <a class="item" id="delete">
-        <i class="trash alternate icon"></i>
-      </a>
+        <a class="item" id="edit" title="Edit">
+          <i class="edit icon"></i>
+        </a>
+        <a class="item" id="delete" title="Delete">
+          <i class="trash alternate icon"></i>
+        </a>
+        <a class="item" id="shift" title="Shift match to this week">
+          <i class="level down icon"></i>
+        </a>
       {{else}}
-      <a class="item" id="add">
-        <i class="plus icon"></i>
-      </a>
+        <a class="item" id="add" title="Add a match">
+          <i class="plus icon"></i>
+        </a>
       {{/if}}
-      <!--<a class="item" id="view">
-        <i class="eye icon"></i>
-        View/hide
-      </a>-->
     </div>
   </div>
 

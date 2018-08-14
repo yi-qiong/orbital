@@ -35,7 +35,7 @@ Template.calendarModal.rendered= function() {
           });
         } else {
           var currentDate = Session.get('currentDate'); //'YYYY-MM-DDThh:mm:ss'
-          Meteor.call('createMatch', sport, round, halls, currentDate , function (error) {
+          Meteor.call('createMatch', sport, round, halls, currentDate , 0, function (error) {
             if (error) {
               // show a nice error message
               Bert.alert('error', 'danger');

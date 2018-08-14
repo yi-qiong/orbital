@@ -10,7 +10,7 @@ const moment = extendMoment(Moment);
 export const Matches = new Mongo.Collection('matches');
 
 Meteor.methods({
-  'createMatch'(sport, round, halls, currentDate) { 
+  'createMatch'(sport, round, halls, currentDate,duration) { 
     // Make sure the user is logged in 
     /*if (!Meteor.userId()) {
       throw new Meteor.Error('logged-out');
@@ -18,7 +18,7 @@ Meteor.methods({
     var users = [];//empty array
     var blockOuts = getBlockOuts(users,sport, halls); //all blockouts
     var weekRange;
-    var start = getStart(currentDate,blockOuts,0);
+    var start = getStart(currentDate,blockOuts,duration);
     blockOuts.push({
       dow: [1,2,3,4,5], 
       start  : '8:00',
@@ -48,9 +48,9 @@ Meteor.methods({
     var users = [];//empty array
     var blockOuts = getBlockOuts(users,sport, halls);
     var match = Matches.findOne({_id: eventId});
-    var duration = moment(match.end).diff(moment.start, 'minutes'); //maintain the duration of the match 
+    var duration = moment(match.end).diff(moment(match.start), 'minutes'); //maintain the duration of the match 
     var weekRange;
-    var start = getStart(match.start,blockOuts,duration);
+    var start = getStart(match.start, blockOuts, duration);
 
     Matches.update(eventId, { 
       $set: {
@@ -68,12 +68,28 @@ Meteor.methods({
     console.log(Matches.find({}).fetch());
   },
 
-  'moveMatch'(eventId, start, end){
+  'moveMatch'(eventId, shiftDate){
+    var match = Matches.findOne({_id: eventId});
+    var duration = moment(match.end).diff(moment(match.start), 'minutes'); //maintain the duration of the match
+    var weekRange;
+    var start = getStart(shiftDate, match.blockOuts, duration);
+    Matches.update(eventId, { 
+      $set: {
+        start: start,
+        end: moment(start).add(duration, 'm').format(),
+        editable: true
+      }
+    });
+    console.log(match);
+  },
+
+  'saveMatch'(eventId,start,end){
     var match = Matches.findOne({_id: eventId});
     Matches.update(eventId, { 
       $set: {
         start: start,
-        end: end, 
+        end: end,
+        editable: false
       }
     });
   }
