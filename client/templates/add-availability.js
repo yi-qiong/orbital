@@ -136,6 +136,12 @@ Template.addAppointment.events({
         document.getElementById("cancel").style.display="none";
       }
 
+      if ($('#availability').checkbox('is checked')) {
+      console.log('checked');
+      $('#availability').checkbox('set unchecked'); // Unchecks it
+      $('#start_time').datetimepicker('enable');
+      $('#end_time').datetimepicker('enable');
+      };
 
       Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
         if ( error ) {
