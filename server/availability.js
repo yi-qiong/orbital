@@ -7,7 +7,7 @@ import {Availability} from '/imports/api/availability.js';
 
 Meteor.publish( 'availability', function() {
   var currentUserId = this.userId;
-   return Availability.find({ owner: currentUserId}, {sort: {date: 1, start: 1}});
+    return Availability.find({ owner: currentUserId}, {sort: {date:1, startObj24Hr: 1}});
 });
 
  
