@@ -14,6 +14,7 @@ new Tabular.Table({
   orderFixed: [[0, 'asc'], [1, 'asc']], //sort the date by ascending
   columns: [
     {data: "date", title: "Blocked Out Date"},
+    {data: "startObj24Hr", title: "start", visible: false},
     {data: "start", title: "Start Time"},
     {data: "end", title: "End Time"},
     {
