@@ -20,11 +20,7 @@ Availability.deny({
 
 Meteor.methods({
   'indicateAvailability'( selectedDate, startTime, endTime ) {
-    check(selectedDate, String );
-    check(startTime, String);
-    check(endTime, String);
     
-
     var dateNstart = selectedDate + " " + startTime;
     var momentStart = moment(dateNstart, 'DD-MM-YYYY HH:mm A');
     var dateNend = selectedDate + " " + endTime;
@@ -35,11 +31,11 @@ Meteor.methods({
       start: startTime,
       end: endTime,
       startObj: momentStart,
+      startObj24Hr: moment(momentStart).format('HH:mm'),
       endObj: momentEnd,
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });
-    
     console.log(Availability.find().fetch());
   },
   'blockout.remove'(id){
