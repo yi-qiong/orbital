@@ -13,12 +13,12 @@ Template.addAppointment.onRendered( () => {
   }); 
 
   $('#start_time').datetimepicker({
-    stepping: 15, //only allow time selection in intervals of 15 mins
+    stepping: 30, //only allow time selection in intervals of 30 mins
     format: 'hh:mm A'
   });
 
   $('#end_time').datetimepicker({
-    stepping: 15, //only allow time selection in intervals of 15 mins
+    stepping: 30, //only allow time selection in intervals of 30 mins
     format: 'hh:mm A'
   });
 
@@ -95,14 +95,16 @@ Template.addAppointment.events({
     //get value to be inserted into availability collection
     var selectedDate = event.target.datePicker.value;
     var startTime = event.target.startTime.value;
+    var startMoment = moment(startTime, 'hh:mm A');
+    console.log(startMoment);
     var endTime = event.target.endTime.value;
+    var endMoment = moment(endTime, 'hh:mm A');
+    console.log(endMoment);
+    console.log(startMoment.isBefore(endMoment));
     $('#datepicker').data('DateTimePicker').date(null);
     $('#start_time').data('DateTimePicker').date(null); 
     $('#end_time').data('DateTimePicker').date(null); //set to placeholder value
-    console.log(selectedDate);
-    console.log(startTime);
-    console.log(endTime);
-
+  
     if (selectedDate =="" || startTime =="" || endTime =="") {
       if ((!($('#availability').checkbox('is checked')) && (startTime =="" || endTime =="")) || selectedDate =="") {
         Bert.alert('Please fill up all fields!', 'danger');
@@ -110,23 +112,13 @@ Template.addAppointment.events({
     }
     
     if (selectedDate != "" && startTime != "" && endTime != "" || selectedDate != "" && $('#availability').checkbox('is checked')) {
-      if ($('#availability').checkbox('is checked')||startTime.indexOf("AM") !== -1 && endTime.indexOf("PM")!== -1){
-      //if whole day not free or startTime is AM and endTime isPM, confirm success?
-        success(); //call for success function
-      } else if ( startTime.indexOf("PM") !== -1 && endTime.indexOf("AM")!== -1){//if startTime is PM and endTime is AM
-        console.log("fail");
-        fail(); //call for fail function
-      } else if (startTime.substring(0,2) ==12 && endTime.substring(0,2)<12 ){
-      //if both AM/ both PM, and startTime hh ==12 and endTime hh <12
-        success();
-      } else if ( startTime<endTime){
-        success();
+      if (startMoment.isBefore(endMoment)) {
+        success()    
       } else {
-        fail();
+        fail()
       }
     }
-
-    function success() {
+     function success() {
       if (Session.get('selectedBlockOut') != null) { //user did click on edit button and they decide to confirm edit 
         var id = Session.get('oldEntry'); 
         console.log(id);
@@ -136,12 +128,6 @@ Template.addAppointment.events({
         document.getElementById("cancel").style.display="none";
       }
 
-      if ($('#availability').checkbox('is checked')) {
-      console.log('checked');
-      $('#availability').checkbox('set unchecked'); // Unchecks it
-      $('#start_time').datetimepicker('enable');
-      $('#end_time').datetimepicker('enable');
-      };
 
       Meteor.call( 'indicateAvailability', selectedDate, startTime, endTime, (error,response) => {
         if ( error ) {
@@ -157,3 +143,4 @@ Template.addAppointment.events({
     }
   }
 });
+
