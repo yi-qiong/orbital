@@ -18,7 +18,7 @@ Template.appointments.rendered = function() {
   		console.log('confirm');
   		var table = $('#atable').DataTable();
   		console.log(table);
-  		table.columns(3).visible( false );
+  		table.columns(4).visible( false );
 	}
 }
 
