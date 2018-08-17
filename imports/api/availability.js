@@ -30,9 +30,9 @@ Meteor.methods({
       date: selectedDate,
       start: startTime,
       end: endTime,
-      startObj: momentStart,
+      startObj: momentStart.format(),
       startObj24Hr: moment(momentStart).format('HH:mm'),
-      endObj: momentEnd,
+      endObj: momentEnd.format(),
       owner: Meteor.userId(),
       username: Meteor.user().username,
     });

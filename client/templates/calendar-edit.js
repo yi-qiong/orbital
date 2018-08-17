@@ -4,7 +4,10 @@ import './calendar-edit.html';
 import '/imports/api/matches.js';
 import {Matches} from '/imports/api/matches.js';
 import {Availability} from '/imports/api/availability.js';
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+
+const moment = extendMoment(Moment);
 
 
 Template.editCalendar.onCreated(function() {
@@ -14,12 +17,13 @@ Template.editCalendar.onCreated(function() {
     this.subscribe('availability');
   });
   Session.set ('currentEditEvent', null);
+  this.clashes = new ReactiveVar ([]);
 });
 
 
 
-Template.editCalendar.rendered = function() {
-
+Template.editCalendar.onRendered (function () {
+  const instance = Template.instance();
   var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
@@ -42,7 +46,7 @@ Template.editCalendar.rendered = function() {
       events: function( start, end, timezone, callback ) {
           callback(Matches.find({}).fetch());
         },
-        color: '#0B7A75',
+        color: '#00226d',
         id: 'matches'
       }
     ],
@@ -55,6 +59,29 @@ Template.editCalendar.rendered = function() {
       }
     },
 
+    eventDrop: function(event, delta, revertFunc) {
+      var start = moment(event.start);
+      var end = moment(event.end);
+      var range1 = moment.range(start,end); //dropping event
+      var overlapEvents = $('#calendar').fullCalendar('clientEvents', function(evt) {
+        if (evt._id!= event._id){
+          var range2 = moment.range(moment(evt.start), moment(evt.end));
+          return range1.overlaps(range2);
+        }
+      });
+      for (var i = 0; i< overlapEvents.length; i++){ //for every event that overlaps with the dragging event
+        var e = overlapEvents[i];
+        var users =  _.intersection(event.users, e.users); //array of users who clash
+        if (users.length!=0){ //there are users who clash
+          instance.clashes.get().push({
+            sport1: event.title,
+            sport2: e.title, 
+            users: users
+          });
+          console.log(instance.clashes.get());
+        }
+      }
+    },
 
     eventAllow: function(dropLocation, draggedEvent) {
       return dropLocation.start.hour()>= 8 && (dropLocation.end.hour()<22 || (dropLocation.end.hour()==22 && dropLocation.end.minutes()==0)); 
@@ -65,6 +92,7 @@ Template.editCalendar.rendered = function() {
       var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
       if (!Session.equals('currentEditEvent',null)){ //close eventMode 
         event.editable = false;
+        event.color= '#00226d';
         $('#calendar').fullCalendar('updateEvent', event);
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
@@ -72,7 +100,6 @@ Template.editCalendar.rendered = function() {
         var end = event.end.format();
         Meteor.call('saveMatch',event._id, start, end );
       }
-    
     },
 
     eventClick: function(calEvent, jsEvent, view) {
@@ -86,6 +113,7 @@ Template.editCalendar.rendered = function() {
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
         calEvent.editable = false;
+        calEvent.color= '#00226d';
         $('#calendar').fullCalendar('updateEvent', calEvent);
         var start = calEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
         var end = calEvent.end.format();
@@ -111,11 +139,13 @@ Template.editCalendar.rendered = function() {
         var eventId =Session.get('prevEditEvent');
         var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
         prevEvent.editable = false;
+        prevEvent.color= '#00226d';
         $('#calendar').fullCalendar('updateEvent', prevEvent);
         var start = prevEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
         var end = prevEvent.end.format();
         Meteor.call('saveMatch', prevEvent._id, start, end );
         calEvent.editable = true;
+        calEvent.color= '#0B7A75';
         $('#calendar').fullCalendar('updateEvent', calEvent);
       } else { //open eventMode      
         Session.set('currentEditEvent',calEvent._id);
@@ -134,6 +164,7 @@ Template.editCalendar.rendered = function() {
           color: '#d5e1df'
         });
         calEvent.editable = true;
+        calEvent.color= '#0B7A75';
         $('#calendar').fullCalendar('updateEvent', calEvent);
       }
     }
@@ -155,7 +186,7 @@ Template.editCalendar.rendered = function() {
       //probably wont execute since nvr include <actions>
     }
   });
-}; 
+}); 
 
 
 
@@ -197,8 +228,6 @@ Template.editCalendar.events({
     var eventId =Session.get('currentEditEvent');
     var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
     Meteor.call('moveMatch', eventId , shiftDate, function () {});
-    event.editable = true;
-    $('#calendar').fullCalendar( 'updateEvent', event );
   }
 });
 
@@ -209,5 +238,10 @@ Template.editCalendar.helpers({
       return false;
     }
     return true;
+  },
+  clashes: function(){
+    console.log(Template.instance().clashes.get());
+    return Template.instance().clashes.get();
+
   }
 });

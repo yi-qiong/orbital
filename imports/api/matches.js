@@ -77,7 +77,8 @@ Meteor.methods({
       $set: {
         start: start,
         end: moment(start).add(duration, 'm').format(),
-        editable: true
+        editable: true,
+        color:  '#0B7A75'
       }
     });
     console.log(match);

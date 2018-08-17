@@ -25,26 +25,35 @@
 
   
     <!--Add the events calendar to the template.-->
-  <div id="calendar"></div>
- 
-  <br>
-  {{ > tooltips }}
-  
-  <div class="ui modal">
-  
-    <div class = "content">
-      {{> calendarModal}}
+    <div id="calendar"></div>
+   
+    <br>
+    {{ > tooltips }}
+    
+    <div class="ui modal">
+    
+      <div class = "content">
+        {{> calendarModal}}
+      </div>
     </div>
-  </div>
 
 
-  <div class="ui negative message">
-    <i class="close icon"></i>
-    <div class="header">
-      Conflict! Player involved in both matches. 
+    <div class="ui negative message">
+      <i class="close icon"></i>
+      <div class="header">
+        Conflict! Player(s) involved in both matches. 
+      </div>
+      
+      {{#each clashes}}
+        <p> Players involved in both {{sport1}} and {{sport2}}: 
+          {{#each user in users}}
+          <ul>
+            <li> {{user}}</li>
+          </ul>
+          {{/each}}
+        </p>
+      {{/each}}
     </div>
-    <!--<p> {{name}} is involved in both {{sport1}} and {{sport2}}</p>-->
-  </div>
   </div>
 </div>
   
