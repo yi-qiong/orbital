@@ -166,9 +166,7 @@ Meteor.methods({
       
       //foreach blockout in weekBO{ if overlap, then return yes} 
       weekBO.forEach(function(blockout) {
-        startObj = moment(blockout.start);
-        endObj = moment(blockout.end);
-        blockOutRange = moment.range(startObj, endObj);
+        blockOutRange = moment.range(blockout.startObj, blockout.endObj);
         if(blockOutRange.overlaps(matchDuration)){
           return true;
         }
