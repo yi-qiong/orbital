@@ -133,9 +133,7 @@ Meteor.methods({
       weekRange = moment.range(weekStart,weekEnd);
 
       var time = moment(weekStart); //cloning the weekStart moment
-      //console.log(weekStart.format());
-      //console.log(weekEnd.format());
-      //console.log(time.format());
+
 
       while(time.isBefore(weekEnd) && (time.hour() > 21 || time.hour() < 8 || isBlockOut(time,blockOuts,duration))) { // out of calendar display 
         time.add(30, 'm'); //add 30 minutes and loop again

@@ -17,13 +17,13 @@ Template.editCalendar.onCreated(function() {
     this.subscribe('availability');
   });
   Session.set ('currentEditEvent', null);
-  this.clashes = new ReactiveVar ([]);
+  this.clashes = new ReactiveArray();
 });
 
 
 
 Template.editCalendar.onRendered (function () {
-  const instance = Template.instance();
+  var instance = Template.instance();
   var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
@@ -65,7 +65,9 @@ Template.editCalendar.onRendered (function () {
       var range1 = moment.range(start,end); //dropping event
       var overlapEvents = $('#calendar').fullCalendar('clientEvents', function(evt) {
         if (evt._id!= event._id){
-          var range2 = moment.range(moment(evt.start), moment(evt.end));
+          var startE = moment(evt.start);
+          var endE = moment(evt.end);
+          var range2 = moment.range(startE, endE);
           return range1.overlaps(range2);
         }
       });
@@ -73,7 +75,7 @@ Template.editCalendar.onRendered (function () {
         var e = overlapEvents[i];
         var users =  _.intersection(event.users, e.users); //array of users who clash
         if (users.length!=0){ //there are users who clash
-          instance.clashes.get().push({
+          instance.clashes.push({
             sport1: event.title,
             sport2: e.title, 
             users: users
@@ -103,6 +105,7 @@ Template.editCalendar.onRendered (function () {
     },
 
     eventClick: function(calEvent, jsEvent, view) {
+      console.log(calEvent);
       Session.set("eventInfo",{ //for writing in modal
         sport: calEvent.sport,
         round: calEvent.round,
