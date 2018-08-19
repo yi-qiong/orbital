@@ -246,5 +246,8 @@ Template.editCalendar.helpers({
     console.log(Template.instance().clashes.get());
     return Template.instance().clashes.get();
 
+  },
+  clashExists: function(){
+    return Template.instance().clashes.get().length >0;
   }
 });

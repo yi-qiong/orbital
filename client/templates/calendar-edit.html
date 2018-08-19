@@ -37,23 +37,24 @@
       </div>
     </div>
 
-
-    <div class="ui negative message">
-      <i class="close icon"></i>
-      <div class="header">
-        Conflict! Player(s) involved in both matches. 
+    {{#if clashExists}}
+      <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+          Conflict! Player(s) involved in both matches. 
+        </div>
+        
+        {{#each clashes}}
+          <p> Players involved in both {{sport1}} and {{sport2}}: 
+            {{#each user in users}}
+            <ul>
+              <li> {{user}}</li>
+            </ul>
+            {{/each}}
+          </p>
+        {{/each}}
       </div>
-      
-      {{#each clashes}}
-        <p> Players involved in both {{sport1}} and {{sport2}}: 
-          {{#each user in users}}
-          <ul>
-            <li> {{user}}</li>
-          </ul>
-          {{/each}}
-        </p>
-      {{/each}}
-    </div>
+    {{/if}}
   </div>
 </div>
   
