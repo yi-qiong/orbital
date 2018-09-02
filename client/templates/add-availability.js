@@ -112,12 +112,20 @@ Template.addAppointment.events({
     }
     
     if (selectedDate != "" && startTime != "" && endTime != "" || selectedDate != "" && $('#availability').checkbox('is checked')) {
-      if (startMoment.isBefore(endMoment)) {
-        success()    
+      if ($('#availability').checkbox('is checked')) {
+        success();
+        $('#availability').checkbox('set unchecked');
+        $('#start_time').datetimepicker('enable');
+        $('#end_time').datetimepicker('enable');
       } else {
-        fail()
+        if (startMoment.isBefore(endMoment)) {
+          success()    
+        } else {
+          fail()
+        }
       }
     }
+
      function success() {
       if (Session.get('selectedBlockOut') != null) { //user did click on edit button and they decide to confirm edit 
         var id = Session.get('oldEntry'); 
