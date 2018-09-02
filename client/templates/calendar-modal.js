@@ -2,8 +2,10 @@ import {Meteor} from 'meteor/meteor';
 import {Template } from 'meteor/templating';
 import './calendar-modal.html';
 import '/imports/api/matches.js'; //meteor methods
+import $ from 'jquery';
 
-Template.calendarModal.rendered= function() {
+
+Template.calendarModal.rendered =function () {
   this.$('.ui.dropdown').dropdown();
   this.$('.ui.checkbox').checkbox();
   this.$('.ui.form') //validate
@@ -48,29 +50,27 @@ Template.calendarModal.rendered= function() {
         $('.ui.form').form('clear');
       }
     });
-  $('.ui.form').form('reset');
-
+  this.$('.ui.form').form('reset');
 };
 
 Template.calendarModal.events({
-'click #close' : function(event, template){
-    console.log("close");
-    $('.ui.form').form('clear'); //clear form before closing modal
-    $('.ui.modal').modal('hide');
-}
+  'click #close' : function(event, template){
+      $('.ui.form').form('clear'); //clear form before closing modal
+      $('.ui.modal').modal('hide');
+  }
 })
 
 Template.editCalendar.events({
   'click #edit': function(e, t) {
-    $('.ui.form').form('reset');
-    $('.ui.form')
+
+    /*$('.ui.form')
     // set as saved values once template is rendered
      .form('set values', {
       sport   : Session.get("eventInfo").sport,
       round   : Session.get("eventInfo").round,
       halls   : Session.get("eventInfo").halls
       })
-    ;
+    ;*/
   }
 })
 

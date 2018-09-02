@@ -32,7 +32,7 @@ Meteor.methods({
       round: round,
       halls: halls,
       start: start,
-      end: moment(start).add(2, 'h').format(), 
+      end: moment(start).add(2, 'h').format('YYYY-MM-DDThh:mm:ss'), 
       users: users, //for clashes and overlap
       blockOuts : blockOuts //dummy to test out 
     }); 
@@ -60,7 +60,7 @@ Meteor.methods({
         round: round,
         halls: halls,
         start: start,
-        end: moment(start).add(duration, 'm').format(), 
+        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'), 
         users: users, //for clashes and overlap
         blockOuts : blockOuts
       }
@@ -76,7 +76,7 @@ Meteor.methods({
     Matches.update(eventId, { 
       $set: {
         start: start,
-        end: moment(start).add(duration, 'm').format(),
+        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'),
         editable: true,
         color:  '#0B7A75'
       }
@@ -144,8 +144,8 @@ Meteor.methods({
         //display ui error message???
       }
 
-      //console.log(time.format());
-      return time.format(); 
+      console.log(time.format('YYYY-MM-DDThh:mm:ss'));
+      return time.format('YYYY-MM-DDThh:mm:ss'); 
     }
 
     function isBlockOut(time,blockOuts,duration){
