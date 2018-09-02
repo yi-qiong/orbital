@@ -11,5 +11,6 @@ Template.mainpage.events({
 
 	'click .conveningUse': function() {
 		Router.go('/conveningLogin');
+		window.location.reload(true); 
 	}
 })
