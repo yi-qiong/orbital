@@ -11,7 +11,6 @@ Meteor.subscribe('registeredPlayers');
 Template.playerLogin.events({
   'click #signUp': function(event) {
     Router.go('/player-register');
-    window.location.reload(true)
   },
   'submit #contact-form': function(event) {
     event.preventDefault();
