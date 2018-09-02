@@ -32,7 +32,7 @@ Meteor.methods({
       round: round,
       halls: halls,
       start: start,
-      end: moment(start).add(2, 'h').format('YYYY-MM-DDThh:mm:ss'), 
+      end: moment(start).add(2, 'h').format(), 
       users: users, //for clashes and overlap
       blockOuts : blockOuts //dummy to test out 
     }); 
@@ -60,7 +60,7 @@ Meteor.methods({
         round: round,
         halls: halls,
         start: start,
-        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'), 
+        end: moment(start).add(duration, 'm').format(), 
         users: users, //for clashes and overlap
         blockOuts : blockOuts
       }
@@ -76,7 +76,7 @@ Meteor.methods({
     Matches.update(eventId, { 
       $set: {
         start: start,
-        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'),
+        end: moment(start).add(duration, 'm').format(),
         editable: true,
         color:  '#0B7A75'
       }
@@ -119,7 +119,7 @@ Meteor.methods({
         teams: sport //searches for all users whose teams array include the given sport
       });
       cursor.forEach(function(user) {
-        users.push(user._id);
+        users.push(user.username);
       }); //add each of the users' ID into [users] array
       return Availability.find
         ({owner : {$in: users}  })
@@ -144,8 +144,8 @@ Meteor.methods({
         //display ui error message???
       }
 
-      console.log(time.format('YYYY-MM-DDThh:mm:ss'));
-      return time.format('YYYY-MM-DDThh:mm:ss'); 
+      //console.log(time.format());
+      return time.format(); 
     }
 
     function isBlockOut(time,blockOuts,duration){
