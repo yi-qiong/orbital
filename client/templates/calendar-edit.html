@@ -1,5 +1,24 @@
 <template name="editCalendar">
 
+{{#if clashExists}}
+      <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+          Conflict! Player(s) involved in both matches. 
+        </div>
+        
+        {{#each clashes}}
+          <p> Players involved in both {{sport1}} and {{sport2}}: 
+            {{#each user in users}}
+            <ul>
+              <li> {{user}}</li>
+            </ul>
+            {{/each}}
+          </p>
+        {{/each}}
+      </div>
+    {{/if}}
+
 <div class="ui grid">
   <div class="one wide column centered" id='eventActions' style="padding:0">
     <div class="ui compact vertical icon menu" style= "margin-top: 61px">
@@ -37,24 +56,6 @@
       </div>
     </div>
 
-    {{#if clashExists}}
-      <div class="ui negative message">
-        <i class="close icon"></i>
-        <div class="header">
-          Conflict! Player(s) involved in both matches. 
-        </div>
-        
-        {{#each clashes}}
-          <p> Players involved in both {{sport1}} and {{sport2}}: 
-            {{#each user in users}}
-            <ul>
-              <li> {{user}}</li>
-            </ul>
-            {{/each}}
-          </p>
-        {{/each}}
-      </div>
-    {{/if}}
   </div>
 </div>
   
