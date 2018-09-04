@@ -36,7 +36,7 @@ Template.calendarModal.rendered =function () {
             } 
           });
         } else {
-          var currentDate = Session.get('currentDate'); //'YYYY-MM-DDThh:mm:ss'
+          var currentDate = Session.get('currentDate'); //'YYYY-MM-DDTHH:mm:ss'
           Meteor.call('createMatch', sport, round, halls, currentDate , 0, function (error) {
             if (error) {
               // show a nice error message
@@ -63,14 +63,14 @@ Template.calendarModal.events({
 Template.editCalendar.events({
   'click #edit': function(e, t) {
 
-    /*$('.ui.form')
+    $('.ui.form')
     // set as saved values once template is rendered
      .form('set values', {
       sport   : Session.get("eventInfo").sport,
       round   : Session.get("eventInfo").round,
       halls   : Session.get("eventInfo").halls
       })
-    ;*/
+    ;
   }
 })
 

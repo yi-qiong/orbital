@@ -6,6 +6,7 @@ import './calendar-edit.html';
 import '/imports/api/matches.js';
 import {Matches} from '/imports/api/matches.js';
 import {Availability} from '/imports/api/availability.js';
+import {Clashes} from '/imports/api/clashes.js';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 
@@ -19,13 +20,12 @@ Template.editCalendar.onCreated(function() {
     this.subscribe('availability');
   });
   Session.set ('currentEditEvent', null);
-  this.clashes = new ReactiveArray();
+  this.subscribe('clashes');
 });
 
 
 
 Template.editCalendar.onRendered (function () {
-  var instance = Template.instance();
   var calendar = $('#calendar').fullCalendar({
     height:"auto",
     //overall
@@ -48,7 +48,7 @@ Template.editCalendar.onRendered (function () {
       events: function( start, end, timezone, callback ) {
           callback(Matches.find({}).fetch());
         },
-        color: '#00226d',
+        color: '#0B7A75',
         id: 'matches'
       }
     ],
@@ -60,14 +60,17 @@ Template.editCalendar.onRendered (function () {
         element.popup();
       }
     },
+
     /*eventOverlap: function(stillEvent, movingEvent) {  //overlapping in or out upon drag or resize
       console.log("event overlap");
       console.log(stillEvent.start.format());
       console.log(movingEvent.start.format());
       return true;
-    }, */
+    },*/ 
 
     eventDrop: function(event, delta, revertFunc) {
+      //remove all the conflicts that has the event inside
+      Meteor.call('removeClash', event._id);
       var start = moment(event.start);
       var end = moment(event.end);
       var range1 = moment.range(start,end); //dropping event
@@ -93,27 +96,21 @@ Template.editCalendar.onRendered (function () {
         }
         var users =  _.intersection(event.users, e.users); //array of users who clash
         if (users.length > 0){ //there are users who clash
-          instance.clashes.push({
-            match1: event._id,
-            match2: e._id,
-            sport1: event.title,
-            sport2: e.title, 
-            users: users //users that are involved in both matches only
-          });
-          event.color= '#77112A'; //red
-          $('#calendar').fullCalendar('updateEvent', event);
-          e.color= '#77112A';
-          $('#calendar').fullCalendar('updateEvent', e);
-          console.log(event);
+          Meteor.call('addClash', event._id, e._id, event.title, e.title, users);
         }
       }
 
       function eventConflict(event1, event2){
-        var array = instance.clashes.get();
-        var obj = _.find(array, function (obj) { 
-          return obj.match1 === event1._id && obj.match2 === event2._id || obj.match1 === event2._id && obj.match2 === event1._id;  
-        });
-        //console.log(obj);
+        var obj = Clashes.findOne({ $or: [
+          { 
+            match1: event1._id ,
+            match2: event2._id 
+          },
+          {
+            match1: event2._id,
+            match2: event1._id
+          }
+        ]});
         return (obj != undefined); //true if it is already in the conflict array
       }
     },
@@ -127,11 +124,11 @@ Template.editCalendar.onRendered (function () {
       var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
       if (!Session.equals('currentEditEvent',null)){ //close eventMode 
         event.editable = false;
-        event.color= '#00226d';
+        event.color = '#0B7A75';
         $('#calendar').fullCalendar('updateEvent', event);
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
-        var start = event.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var start = event.start.format(); //'YYYY-MM-DDTHH:mm:ss'
         var end = event.end.format();
         Meteor.call('saveMatch',event._id, start, end );
       }
@@ -139,6 +136,7 @@ Template.editCalendar.onRendered (function () {
 
     eventClick: function(calEvent, jsEvent, view) {
       //console.log(calEvent.start);
+      $('#calendar').fullCalendar('updateEvent', calEvent);
       Session.set("eventInfo",{ //for writing in modal
         sport: calEvent.sport,
         round: calEvent.round,
@@ -149,67 +147,63 @@ Template.editCalendar.onRendered (function () {
         Session.set('currentEditEvent',null);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
         calEvent.editable = false;
+        console.log(calEvent.color);
+        calEvent.color = '#0B7A75'; //light teal
         $('#calendar').fullCalendar('updateEvent', calEvent);
-        var start = calEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var start = calEvent.start.format(); //'YYYY-MM-DDTHH:mm:ss'
         var end = calEvent.end.format();
-        Meteor.call('saveMatch',calEvent._id, start, end );  
+        Meteor.call('saveMatch',calEvent._id, start, end);  
       } else if (!Session.equals('currentEditEvent',null)) { //click on another event while in eventMode
         Session.set('prevEditEvent', Session.get('currentEditEvent'));
         Session.set('currentEditEvent',calEvent._id);
         $('#calendar').fullCalendar( 'removeEventSource', 'available slots'); //remove current available slots
         $('#calendar').fullCalendar('addEventSource', { //add current available slots
           id: 'available slots' ,
-          events: [
-            {
-              dow: [1,2,3,4,5], 
-              start  : '8:00',
-              end : '18:00'           
-            },
-            calEvent.blockOuts
-          ],
+          events: calEvent.blockOuts,
           rendering: 'inverse-background', //so it shows the available slots instead
           overlap: false, //cannot drag or resize matches onto blockouts
           color: '#d5e1df'
         });
         var eventId =Session.get('prevEditEvent');
         var prevEvent = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
-        var start = prevEvent.start.format(); //'YYYY-MM-DDThh:mm:ss'
+        var start = prevEvent.start.format(); //'YYYY-MM-DDTHH:mm:ss'
         var end = prevEvent.end.format();
-        Meteor.call('saveMatch', prevEvent._id, start, end );
         prevEvent.editable = false; 
+        prevEvent.color = '#0B7A75';
         $('#calendar').fullCalendar('updateEvent', prevEvent);
+        Meteor.call('saveMatch', prevEvent._id, start, end, prevEvent.color);
         calEvent.editable = true;
+        calEvent.color = '#095d59';
         $('#calendar').fullCalendar('updateEvent', calEvent);
-      } else { //open eventMode      
+      } else { //open eventMode   
+        $('#calendar').fullCalendar( 'removeEventSource', 'available slots');   
         Session.set('currentEditEvent',calEvent._id);
         $('#calendar').fullCalendar('addEventSource', { //add current available slots
           id: 'available slots' ,
-          events: [
-            {
-              dow: [1,2,3,4,5], 
-              start  : '8:00',
-              end : '18:00'           
-            },
-            calEvent.blockOuts
-          ],
+          events: calEvent.blockOuts,
           rendering: 'inverse-background', //so it shows the available slots instead
           overlap: false, //cannot drag or resize matches onto blockouts
           color: '#d5e1df'
         });
+
+        calEvent.color = '#095d59'; //dark teal
         calEvent.editable = true;
         // transition
         $('#calendar').fullCalendar('updateEvent', calEvent);
       }
-      
-      function eventConflict(event){
-        var array = instance.clashes.get();
-        //console.log(array);
-        //console.log(event);
-        var obj = _.find(array, function (obj) { return obj.match1 === event._id||obj.match2 === event._id; });
-        //console.log(obj);
-        return (obj != undefined); //true if there are conflicts
+    },
+
+    viewRender: function (view, element) {
+      if (Session.get("currentEditEvent")!= null){
+        var eventId =Session.get('currentEditEvent');
+    var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
+      event.color = '#095d59'; //dark teal
+        event.editable = true;
+        // transition
+        $('#calendar').fullCalendar('updateEvent', event);
       }
-    }
+      
+    },
   }).data().fullCalendar;
 
 
@@ -241,6 +235,7 @@ Template.editCalendar.events({
     $("#calendar").fullCalendar('removeEvents', function(event){
       return true;
     });
+    $('#calendar').fullCalendar( 'removeEventSource', 'available slots');   
     Meteor.call('deleteMatch', eventId , function (error) {
       if (error) {
       // show a nice error message
@@ -252,9 +247,10 @@ Template.editCalendar.events({
     $(this).blur(); //prevent button focus
     Session.set('currentEditEvent',null);
     $('#calendar').fullCalendar( 'removeEventSource', 'available slots');
+    Meteor.call('removeClash', eventId);
   },
   'click #add': function(e, t) {
-    Session.set("currentDate", $('#calendar').fullCalendar('getDate').format()); //'YYYY-MM-DDThh:mm:ss' 
+    Session.set("currentDate", $('#calendar').fullCalendar('getDate').format()); //'YYYY-MM-DDTHH:mm:ss' 
     $('.ui.modal').modal({
       inverted: true,
       autofocus: false,
@@ -263,11 +259,13 @@ Template.editCalendar.events({
     $(this).blur(); //prevent button focus
   },
   'click #shift': function(e, t) {
-    var shiftDate =  $('#calendar').fullCalendar('getDate').format(); //'YYYY-MM-DDThh:mm:ss' 
+    var shiftDate =  $('#calendar').fullCalendar('getDate').format(); //'YYYY-MM-DDTHH:mm:ss' 
     $(this).blur(); //prevent button focus
     var eventId =Session.get('currentEditEvent');
     var event = $("#calendar").fullCalendar( 'clientEvents', eventId )[0];
     Meteor.call('moveMatch', eventId , shiftDate, function () {});
+    event.color = '#095d59'; //dark teal
+    $('#calendar').fullCalendar('updateEvent', event);
   }
 });
 
@@ -280,11 +278,23 @@ Template.editCalendar.helpers({
     return true;
   },
   clashes: function(){
-    console.log(Template.instance().clashes.get());
-    return Template.instance().clashes.get();
-
+    /*var date = Session.get('currentDate');
+    var weekStart = moment(date, moment.ISO_8601).startOf('week');
+    var weekEnd = moment(date, moment.ISO_8601).endOf('week');
+    weekRange = moment.range(weekStart,weekEnd);
+    console.log(Clashes.find({date: {$lte: Date(weekEnd), $gte: Date(weekStart)}}).fetch());*/
+    return Clashes.find({}).fetch();
   },
   clashExists: function(){
-    return Template.instance().clashes.get().length >0;
+    /*console.log("run");
+    var date = Session.get('currentDate');
+    console.log(date);
+    var weekStart = moment(date, moment.ISO_8601).startOf('week');
+    var weekEnd = moment(date, moment.ISO_8601).endOf('week');
+    weekRange = moment.range(weekStart,weekEnd);
+    console.log(date <= weekEnd);
+    console.log(date >= weekStart);
+    console.log(weekStart);*/
+    return Clashes.find({}).fetch().length>0;
   }
 });

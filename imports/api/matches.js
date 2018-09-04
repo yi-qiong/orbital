@@ -19,11 +19,7 @@ Meteor.methods({
     var blockOuts = getBlockOuts(users,sport, halls); //all blockouts
     var weekRange;
     var start = getStart(currentDate,blockOuts,duration);
-    blockOuts.push({
-      dow: [1,2,3,4,5], 
-      start  : '8:00',
-      end : '18:00'           
-    })
+    
 
     Matches.insert({
       title: sport + " (" + round +")" , //eg: Tennis(F) (Finals)
@@ -32,7 +28,7 @@ Meteor.methods({
       round: round,
       halls: halls,
       start: start,
-      end: moment(start).add(2, 'h').format('YYYY-MM-DDThh:mm:ss'), 
+      end: moment(start).add(2, 'h').format('YYYY-MM-DDTHH:mm:ss'), 
       users: users, //for clashes and overlap
       blockOuts : blockOuts //dummy to test out 
     }); 
@@ -60,7 +56,7 @@ Meteor.methods({
         round: round,
         halls: halls,
         start: start,
-        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'), 
+        end: moment(start).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss'), 
         users: users, //for clashes and overlap
         blockOuts : blockOuts
       }
@@ -76,9 +72,9 @@ Meteor.methods({
     Matches.update(eventId, { 
       $set: {
         start: start,
-        end: moment(start).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss'),
+        end: moment(start).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss'),
         editable: true,
-        color:  '#0B7A75'
+        color: '#095d59'
       }
     });
     console.log(match);
@@ -90,7 +86,8 @@ Meteor.methods({
       $set: {
         start: start,
         end: end,
-        editable: false
+        editable: false,
+        color: '#0B7A75'
       }
     });
   }
@@ -114,19 +111,23 @@ Meteor.methods({
     }
 
     function getBlockOuts(users, sport, halls) {
+      var blockouts = [];
       var cursor = Meteor.users.find({
         hall: {$in:halls}, //check if user's hall is in the array 
         teams: sport //searches for all users whose teams array include the given sport
       });
       cursor.forEach(function(user) {
+        //console.log(user.username);
         users.push(user._id);
       }); //add each of the users' ID into [users] array
-      return Availability.find
-        ({owner : {$in: users}  })
-      .fetch();// get the blockouts of all players involved
+      cursor = Availability.find({owner : {$in: users} });// get the blockouts of all players involved
+      cursor.forEach(function(blockout) {
+        blockouts.push({start: blockout.startObj, end: blockout.endObj}); //must be in event object form
+      }); 
+      return blockouts;
     }
 
-    function getStart(currentDate,blockOuts,duration){ //'YYYY-MM-DDThh:mm:ss'
+    function getStart(currentDate,blockOuts,duration){ //'YYYY-MM-DDTHH:mm:ss'
       //console.log(moment(currentDate));
       var weekStart = moment(currentDate, moment.ISO_8601).startOf('week');
       var weekEnd = moment(currentDate, moment.ISO_8601).endOf('week');
@@ -144,12 +145,12 @@ Meteor.methods({
         //display ui error message???
       }
 
-      console.log(time.format('YYYY-MM-DDThh:mm:ss'));
-      return time.format('YYYY-MM-DDThh:mm:ss'); 
+      console.log(time.format('YYYY-MM-DDTHH:mm:ss'));
+      return time.format('YYYY-MM-DDTHH:mm:ss'); 
     }
 
     function isBlockOut(time,blockOuts,duration){
-      var weekBO = blockOuts.filter( function (blockout){
+        var weekBO = blockOuts.filter( function (blockout){
         var startObj = moment(blockout.start);
         var endObj = moment(blockout.end);
         var blockOutRange = moment.range(startObj, endObj);
