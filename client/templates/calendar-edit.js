@@ -298,8 +298,8 @@ Template.editCalendar.helpers({
     return Clashes.find({}).fetch().length>0;
   },
   userName: function(id) {
-    var user = Meteor.users.find({_id: id});
-    var username = user._selectorId;
-    return username;
+    var user = Meteor.users.findOne(id);
+    var username = user.username;
+     return username;
   }
 });
