@@ -296,5 +296,10 @@ Template.editCalendar.helpers({
     console.log(date >= weekStart);
     console.log(weekStart);*/
     return Clashes.find({}).fetch().length>0;
+  },
+  userName: function(id) {
+    var user = Meteor.users.find({_id: id});
+    var username = user._selectorId;
+    return username;
   }
 });
